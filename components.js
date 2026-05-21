@@ -111,11 +111,18 @@
       <nav class="nav" style="background:#141413; color:white;">
         <div class="container nav-content">
           <a href="index.html" class="logo" style="color:white;">Invest<span style="color:#f37338;">Match</span> 
-            <span style="font-size:0.7rem; background:#333; padding:1px 6px; border-radius:4px; margin-left:6px;">ADMIN</span>
+            <span style="font-size:0.65rem; background:#333; padding:1px 5px; border-radius:4px; margin-left:4px;">ADMIN</span>
           </a>
-          <div style="color:#888; font-size:0.85rem;">Client Admin Panel • iSoftro</div>
-          <a href="index.html" class="btn btn-ghost" style="color:#ccc;">Exit to Public Site</a>
+          
+          <div class="nav-links" id="nav-links-admin" style="display:none;"></div>
+          
+          <div class="nav-actions">
+            <a href="index.html" class="btn btn-ghost" style="color:#ccc; font-size:0.85rem; padding:0.5rem 0.9rem;">Exit to Public Site</a>
+            <!-- Mobile hamburger for admin -->
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-admin')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #555; border-radius:8px; padding:8px 10px; font-size:1.35rem; cursor:pointer; color:#ccc;">☰</button>
+          </div>
         </div>
+        <div class="mobile-nav-drawer" id="mobile-drawer-admin" style="display:none; background:#1f1f1f; color:#ccc; border-top:1px solid #333; padding:0.75rem 1rem;"></div>
       </nav>
     `;
   }
@@ -320,8 +327,14 @@
     const drawer = document.getElementById(drawerId);
     if (!drawer) return;
 
+    const btn = event.currentTarget || null; // not always reliable from inline onclick
+
     if (drawer.style.display === 'block') {
       drawer.style.display = 'none';
+      // Try to restore hamburger icon if we can find sibling button
+      const headerNav = drawer.parentElement;
+      const ham = headerNav && headerNav.querySelector('.mobile-menu-btn');
+      if (ham) ham.textContent = '☰';
       return;
     }
 
@@ -329,9 +342,13 @@
     const linksContainer = document.getElementById(linkContainerId);
     if (linksContainer) {
       drawer.innerHTML = `<div style="display:flex; flex-direction:column; gap:0.5rem;">${linksContainer.innerHTML}</div>`;
-      // Re-bind any onclick if needed (demo switcher is separate)
     }
     drawer.style.display = 'block';
+
+    // Change hamburger to close icon
+    const headerNav = drawer.parentElement;
+    const ham = headerNav && headerNav.querySelector('.mobile-menu-btn');
+    if (ham) ham.textContent = '✕';
   };
 
 })();

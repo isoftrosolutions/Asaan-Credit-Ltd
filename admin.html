@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — InvestMatch Nepal</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-tab { padding:10px 18px; border-radius:999px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+    .admin-tab.active { background:#cf4500; color:white; }
+  </style>
+</head>
+<body>
+  <!-- Reusable Header -->
+  <div id="header-root"></div>
+  <script src="components.js"></script>
+  <script>injectHeader('admin');</script>
+
+  <div class="container" style="padding-top:2rem;">
+    <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+      <div onclick="showAdminTab('analytics')" class="admin-tab active" id="tab-analytics">Analytics</div>
+      <div onclick="showAdminTab('verification')" class="admin-tab" id="tab-verification">Verification Queue (12)</div>
+      <div onclick="showAdminTab('users')" class="admin-tab" id="tab-users">User Management</div>
+      <div onclick="showAdminTab('broadcast')" class="admin-tab" id="tab-broadcast">Broadcast</div>
+    </div>
+    
+    <!-- ANALYTICS TAB -->
+    <div id="admin-analytics">
+      <h2>Platform Analytics</h2>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:1rem; margin:1.5rem 0;">
+        <div class="stat-card"><div class="stat-value">1,284</div><div class="stat-label">Total users</div></div>
+        <div class="stat-card"><div class="stat-value">312</div><div class="stat-label">Verified investors</div></div>
+        <div class="stat-card"><div class="stat-value">847</div><div class="stat-label">Active pitches</div></div>
+        <div class="stat-card"><div class="stat-value">1,912</div><div class="stat-label">Interest requests</div></div>
+        <div class="stat-card"><div class="stat-value">214</div><div class="stat-label">Matches made</div></div>
+      </div>
+      
+      <div class="card">
+        <h4 style="margin-bottom:1rem;">User Growth (Last 30 days)</h4>
+        <div style="height:160px; background:linear-gradient(#f6f3f1, #fff); border-radius:12px; display:flex; align-items:flex-end; gap:4px; padding:1rem;">
+          <!-- Simple fake bar chart -->
+          <div style="flex:1; background:#cf4500; height:35%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:48%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:62%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:71%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:55%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:84%; border-radius:4px 4px 0 0;"></div>
+          <div style="flex:1; background:#cf4500; height:90%; border-radius:4px 4px 0 0;"></div>
+        </div>
+        <div style="font-size:0.75rem; color:#888; margin-top:0.5rem;">+38% MoM growth • 214 new verified users last week</div>
+      </div>
+    </div>
+    
+    <!-- VERIFICATION QUEUE -->
+    <div id="admin-verification" style="display:none;">
+      <h2>Verification Queue — 12 Pending</h2>
+      <div class="card" style="margin-top:1rem;">
+        <table style="width:100%;">
+          <tr style="border-bottom:1px solid #eae8e6;"><th style="text-align:left; padding:8px;">User</th><th style="text-align:left; padding:8px;">Type</th><th style="padding:8px;">Docs</th><th style="padding:8px;">Submitted</th><th></th></tr>
+          <tr style="border-bottom:1px solid #eee;">
+            <td style="padding:10px 8px;">Bikash Rana (bikash@agro.np)</td>
+            <td style="padding:10px 8px;">Entrepreneur • Individual</td>
+            <td style="padding:10px 8px;"><a href="#" style="color:#cf4500;">Citizenship.pdf</a></td>
+            <td style="padding:10px 8px; font-size:0.85rem;">May 19</td>
+            <td style="padding:10px 8px;"><button onclick="approveVerification(this)" class="btn btn-sm" style="background:#166534; color:white;">Approve</button> <button onclick="rejectVerification(this)" class="btn btn-sm" style="background:#b91c1c; color:white;">Reject</button></td>
+          </tr>
+          <tr>
+            <td style="padding:10px 8px;">Himalayan Ventures Pvt. Ltd</td>
+            <td style="padding:10px 8px;">Investor • Company</td>
+            <td style="padding:10px 8px;"><a href="#" style="color:#cf4500;">PAN + Reg.pdf</a></td>
+            <td style="padding:10px 8px; font-size:0.85rem;">May 18</td>
+            <td style="padding:10px 8px;"><button onclick="approveVerification(this)" class="btn btn-sm" style="background:#166534; color:white;">Approve</button> <button onclick="rejectVerification(this)" class="btn btn-sm" style="background:#b91c1c; color:white;">Reject</button></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- USER MANAGEMENT -->
+    <div id="admin-users" style="display:none;">
+      <h2>All Users (1,284)</h2>
+      <div class="card">
+        <input type="text" class="input" placeholder="Search name, email or company..." style="margin-bottom:1rem;">
+        <div style="max-height:380px; overflow:auto;">
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><div><strong>Pratima Shrestha</strong> — Investor • Verified</div><button class="btn btn-sm btn-secondary">View / Suspend</button></div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;"><div><strong>TechKTM Pvt. Ltd</strong> — Entrepreneur • Pending</div><button class="btn btn-sm btn-secondary">View / Suspend</button></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- BROADCAST -->
+    <div id="admin-broadcast" style="display:none;">
+      <h2>Send Platform Broadcast</h2>
+      <div class="card" style="max-width:620px;">
+        <div class="input-group"><label>Audience</label>
+          <select class="select"><option>All Users</option><option>Verified Investors Only</option><option>Entrepreneurs Only</option><option>Pending Verification</option></select>
+        </div>
+        <div class="input-group"><label>Subject</label><input class="input" value="Platform maintenance this Sunday 2-4 AM NPT"></div>
+        <div class="input-group"><label>Message</label><textarea>Dear users, we will be performing scheduled maintenance...</textarea></div>
+        <button onclick="sendBroadcast(this)" class="btn btn-primary">Send to 1,284 users</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showAdminTab(tab) {
+      document.querySelectorAll('[id^="admin-"]').forEach(el => el.style.display = 'none');
+      document.getElementById('admin-' + tab).style.display = 'block';
+      
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+    
+    function approveVerification(btn) {
+      btn.parentElement.innerHTML = '<span style="color:#166534; font-weight:600;">Approved ✓</span>';
+    }
+    function rejectVerification(btn) {
+      const reason = prompt('Enter rejection reason (sent to user):', 'Document blurry — please re-upload clear copy');
+      if (reason) btn.parentElement.innerHTML = '<span style="color:#b91c1c;">Rejected</span>';
+    }
+    function sendBroadcast(btn) {
+      btn.outerHTML = '<div style="color:#166534; font-weight:600; padding:1rem;">Broadcast queued. 1,284 users will receive it within 5 minutes.</div>';
+    }
+    
+    // Show analytics by default
+    document.getElementById('admin-analytics').style.display = 'block';
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Investors — InvestMatch Nepal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Reusable Header -->
+  <div id="header-root"></div>
+  <script src="components.js"></script>
+  <script>injectHeader('public');</script>
+  
+  <div class="container" style="padding:2rem 0 3rem;">
+    <h2>Active Investors (63 verified)</h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:1rem; margin-top:1.5rem;">
+      <div class="card" onclick="location.href='public-investor-profile.html'">
+        <div class="header">
+          <div class="avatar avatar-sm" style="background:#166534;">RT</div>
+          <div><strong>Ramesh Thapa</strong><div class="text-xs">Angel • Kathmandu • Ticket: NPR 15-80M</div></div>
+        </div>
+        <div style="margin-top:0.75rem; font-size:0.9rem;">Climate &amp; Agri focused. 4 investments in last 18 months.</div>
+      </div>
+      <div class="card" onclick="location.href='public-investor-profile.html'">
+        <div class="header">
+          <div class="avatar avatar-sm" style="background:#854d0e;">HS</div>
+          <div><strong>Himalayan Seed Fund</strong><div class="text-xs">VC • Pokhara • Ticket: NPR 40-150M</div></div>
+        </div>
+        <div style="margin-top:0.75rem; font-size:0.9rem;">Early-stage agritech and clean energy. 9 portfolio companies.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

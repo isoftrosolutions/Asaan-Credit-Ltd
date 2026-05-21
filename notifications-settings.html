@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications &amp; Settings — InvestMatch Nepal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Reusable Header -->
+  <div id="header-root"></div>
+  <script src="components.js"></script>
+  <script>injectHeader('public');</script>
+  <div class="container" style="max-width:620px; padding:2rem 0;">
+    <h2>Notifications &amp; Account Settings</h2>
+    
+    <div class="card">
+      <h4>Email Notifications</h4>
+      <label style="display:block; margin:12px 0;"><input type="checkbox" checked> New interest requests</label>
+      <label style="display:block; margin:12px 0;"><input type="checkbox" checked> Match confirmations</label>
+      <label style="display:block; margin:12px 0;"><input type="checkbox"> Weekly digest of new matches</label>
+      <label style="display:block; margin:12px 0;"><input type="checkbox" checked> Platform announcements</label>
+    </div>
+    
+    <div class="card" style="margin-top:1.5rem;">
+      <h4>Account</h4>
+      <button onclick="if(confirm('This is a demo. In real app this would request deletion.')) alert('Account deletion request submitted. Admin will contact you within 7 days.')" class="btn btn-secondary" style="margin-top:0.5rem;">Request Account Deletion</button>
+    </div>
+  </div>
+</body>
+</html>

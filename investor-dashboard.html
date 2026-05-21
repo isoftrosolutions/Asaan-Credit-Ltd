@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investor Dashboard — InvestMatch Nepal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Reusable Header -->
+  <div id="header-root"></div>
+  <script src="components.js"></script>
+  <script>injectHeader('dashboard', 'investor');</script>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+      <!-- Reusable Sidebar -->
+      <div id="sidebar-root"></div>
+      <script>injectSidebar('investor');</script>
+    
+    <!-- Main Content -->
+    <div class="container main-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+        <div>
+          <h2 style="margin-bottom:0.25rem;">Good morning, Ramesh</h2>
+          <div style="color:#666;">You have <strong>4 new interest opportunities</strong> this week</div>
+        </div>
+        <a href="browse-entrepreneurs.html" class="btn btn-accent">Browse all pitches →</a>
+      </div>
+      
+      <!-- Stats -->
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; margin-bottom:2rem;">
+        <div class="stat-card">
+          <div class="stat-value">12</div>
+          <div class="stat-label">Active interests sent</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Matches made</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">87</div>
+          <div class="stat-label">Pitches in pipeline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">NPR 180M</div>
+          <div class="stat-label">Total ticket capacity</div>
+        </div>
+      </div>
+      
+      <h3 style="margin-bottom:1rem;">Smart Suggestions for You</h3>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:1rem;">
+        <div class="card pitch-card" onclick="location.href='public-pitch-detail.html'">
+          <div class="header">
+            <div class="avatar">AK</div>
+            <div style="flex:1;">
+              <strong>Aarohan Kitchens</strong>
+              <div class="text-xs" style="color:#666;">AgriTech • Kathmandu • 92% match</div>
+            </div>
+            <span class="verified-badge">Verified</span>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <div style="font-weight:600;">AI cold storage for 2,400 farmers</div>
+            <div class="text-sm">Raising NPR 28M for 12% equity</div>
+          </div>
+          <div style="margin-top:1rem;">
+            <button onclick="event.stopImmediatePropagation(); showInterestModal()" class="btn btn-accent btn-sm" style="width:100%;">Express Interest</button>
+          </div>
+        </div>
+        
+        <div class="card pitch-card" onclick="location.href='public-pitch-detail.html'">
+          <div class="header">
+            <div class="avatar" style="background:#0ea5e9;">SS</div>
+            <div style="flex:1;">
+              <strong>Sajha Solar</strong>
+              <div class="text-xs" style="color:#666;">CleanTech • Pokhara • 87% match</div>
+            </div>
+            <span class="verified-badge">Verified</span>
+          </div>
+          <div style="margin-top:0.5rem;">
+            <div style="font-weight:600;">Solar micro-grids for off-grid villages</div>
+            <div class="text-sm">Raising NPR 41M for 18% equity</div>
+          </div>
+          <div style="margin-top:1rem;">
+            <button onclick="event.stopImmediatePropagation(); showInterestModal()" class="btn btn-accent btn-sm" style="width:100%;">Express Interest</button>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top:2.5rem;">
+        <h3>Recent Activity</h3>
+        <div class="card" style="padding:1rem 1.25rem; font-size:0.9rem;">
+          <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0edeb;">
+            <div>✅ <strong>GreenPath Logistics</strong> accepted your interest request</div>
+            <div style="color:#888; font-size:0.75rem;">2 days ago</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0;">
+            <div>📩 New pitch <strong>Nepal Waste Solutions</strong> matches your mandate</div>
+            <div style="color:#888; font-size:0.75rem;">Yesterday</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interest Modal -->
+  <div id="interest-modal" class="modal" onclick="document.getElementById('interest-modal').classList.remove('open')">
+    <div class="modal-content" onclick="event.stopImmediatePropagation()">
+      <div class="modal-header">
+        <h3>Send Interest Request</h3>
+        <button class="close-btn" onclick="document.getElementById('interest-modal').classList.remove('open')">×</button>
+      </div>
+      <p style="margin-bottom:1rem;">You are expressing interest in <strong>Aarohan Kitchens</strong>. The founder will see your full verified profile.</p>
+      
+      <div class="input-group">
+        <label>Short message (optional, max 250 chars)</label>
+        <textarea placeholder="I love the traction numbers and believe our distribution network in Province 1 could help scale this..."></textarea>
+      </div>
+      
+      <button onclick="sendInterest()" class="btn btn-primary" style="width:100%;">Send Interest Request</button>
+      <div style="font-size:0.75rem; text-align:center; margin-top:0.75rem; color:#888;">You have 7 requests remaining today</div>
+    </div>
+  </div>
+
+  <script>
+    function showInterestModal() {
+      document.getElementById('interest-modal').classList.add('open');
+    }
+    function sendInterest() {
+      const modal = document.getElementById('interest-modal');
+      modal.innerHTML = `<div class="modal-content"><h3 style="text-align:center;">Interest sent successfully!</h3><p style="text-align:center;">The entrepreneur has been notified. You will receive an email when they respond.</p><button onclick="location.reload()" class="btn btn-primary" style="width:100%;">Done</button></div>`;
+    }
+  </script>
+</body>
+</html>

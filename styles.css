@@ -1,0 +1,524 @@
+/* InvestMatch Nepal - Institutional Editorial Design System */
+/* Self-contained CSS for offline, fully static HTML mockup */
+
+:root {
+  --surface: #fcf9f7;
+  --surface-dim: #dcd9d8;
+  --surface-bright: #fcf9f7;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f6f3f1;
+  --surface-container: #f0edeb;
+  --surface-container-high: #eae8e6;
+  --surface-container-highest: #e5e2e0;
+  --on-surface: #1c1c1b;
+  --on-surface-variant: #464742;
+  --inverse-surface: #31302f;
+  --inverse-on-surface: #f3f0ee;
+  --outline: #767872;
+  --outline-variant: #c7c7c0;
+  --primary: #000000;
+  --on-primary: #ffffff;
+  --secondary: #aa3700;
+  --secondary-container: #fd6528;
+  --on-secondary-container: #581900;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --background: #fcf9f7;
+  --on-background: #1c1c1b;
+  --accent: #cf4500;
+  --accent-light: #f37338;
+  --cream: #f3f0ee;
+  --ink: #141413;
+  --radius-sm: 0.5rem;
+  --radius: 1rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+  --radius-full: 9999px;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --gutter: 24px;
+  --max-width: 1280px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--on-background);
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 1rem 0;
+}
+
+h1 { font-size: 3.5rem; line-height: 1.1; }
+h2 { font-size: 2.75rem; line-height: 1.15; }
+h3 { font-size: 1.875rem; line-height: 1.2; font-weight: 600; }
+h4 { font-size: 1.25rem; font-weight: 600; }
+
+p, .body-md {
+  font-size: 1rem;
+  font-weight: 450;
+  color: var(--on-surface-variant);
+}
+
+.body-lg { font-size: 1.125rem; font-weight: 450; }
+.label-lg { font-size: 0.875rem; font-weight: 600; letter-spacing: 0.02em; }
+.label-md { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .container { padding: 0 1rem; }
+  h1 { font-size: 2.25rem; }
+}
+
+/* Navigation */
+.nav {
+  background: rgba(252, 249, 247, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--surface-container-high);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+}
+
+.nav-links a.active {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 1.25rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+}
+
+.btn-secondary:hover {
+  background: var(--ink);
+  color: white;
+}
+
+.btn-accent {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-accent:hover {
+  background: #aa3700;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--on-surface-variant);
+  padding: 0.5rem 1rem;
+}
+
+.btn-ghost:hover {
+  background: var(--surface-container);
+  color: var(--ink);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-radius: 0.75rem;
+}
+
+/* Cards */
+.card {
+  background: var(--surface-container-lowest);
+  border-radius: 2.5rem;
+  padding: 1.75rem;
+  border: 1px solid var(--surface-container-high);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+}
+
+.card-compact {
+  padding: 1.25rem;
+  border-radius: 1.5rem;
+}
+
+.pitch-card, .investor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pitch-card .header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-sm {
+  width: 40px;
+  height: 40px;
+  font-size: 0.9rem;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #e0f0ff;
+  color: #0066cc;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+.verified-badge::before {
+  content: "✓";
+  font-weight: 900;
+}
+
+/* Forms - Minimal bottom border style per design system */
+.input-group {
+  margin-bottom: 1.25rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.input, .select, textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--outline-variant);
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--ink);
+  transition: border-color 0.2s;
+}
+
+.input:focus, .select:focus, textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.input::placeholder {
+  color: var(--on-surface-variant);
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+  border-bottom: 1.5px solid var(--outline-variant);
+}
+
+.select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' viewBox='0 0 24 24' stroke='%23767872'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  padding-right: 1.5rem;
+}
+
+/* Decorative Orbiting Arcs (per design system) */
+.orbit-container {
+  position: relative;
+}
+
+.orbit-arc {
+  position: absolute;
+  border: 1px solid var(--accent-light);
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.orbit-arc-1 { top: -20px; right: -30px; width: 120px; height: 120px; }
+.orbit-arc-2 { bottom: -40px; left: -50px; width: 160px; height: 160px; }
+
+/* Section */
+.section {
+  padding: 5rem 0;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3rem;
+}
+
+/* Dashboard Layout */
+.dashboard {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  min-height: calc(100vh - 72px);
+}
+
+.sidebar {
+  background: var(--surface-container-low);
+  padding: 1.5rem;
+  border-right: 1px solid var(--surface-container);
+  height: 100%;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: var(--on-surface-variant);
+  text-decoration: none;
+  border-radius: 0.75rem;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: white;
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.main-content {
+  padding: 2rem 0;
+}
+
+/* Stats / Metrics */
+.stat-card {
+  background: var(--surface-container-lowest);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--surface-container-high);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+}
+
+/* Modals */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(28, 28, 27, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--surface-container-lowest);
+  border-radius: 2rem;
+  padding: 2rem;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--on-surface-variant);
+}
+
+/* Tags / Pills */
+.tag {
+  display: inline-block;
+  padding: 4px 14px;
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag-accent {
+  background: #fff0e6;
+  color: var(--accent);
+}
+
+/* Footer */
+.footer {
+  background: var(--inverse-surface);
+  color: var(--inverse-on-surface);
+  padding: 3rem 0 1.5rem;
+  margin-top: 4rem;
+}
+
+.footer a {
+  color: #c7c7c0;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: white;
+}
+
+/* Utility */
+.flex { display: flex; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-8 { margin-top: 2rem; }
+.text-center { text-align: center; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.font-semibold { font-weight: 600; }
+.text-orange { color: var(--accent); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+}
+
+/* Print / Share friendly */
+@media print {
+  .nav, .btn, .modal { display: none !important; }
+}

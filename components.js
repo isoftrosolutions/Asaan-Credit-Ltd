@@ -60,9 +60,9 @@
             <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-public', this)" aria-label="Menu">☰</button>
             
             <!-- Demo role switcher -->
-            <div onclick="switchDemoRole()" style="cursor:pointer; margin-left:8px; font-size:0.75rem; padding:4px 10px; background:#f0edeb; border-radius:999px; display:flex; align-items:center; gap:4px;">
+            <button class="demo-role-pill" onclick="switchDemoRole()" aria-label="Switch demo role">
               <span id="demo-role">Demo: Guest</span>
-            </div>
+            </button>
           </div>
         </div>
         <div class="mobile-nav-drawer" id="mobile-drawer-public">
@@ -310,15 +310,6 @@
     if (document.getElementById('footer-root')) {
       window.injectFooter();
     }
-    // Show mobile hamburger buttons on small screens (sync with CSS 900px breakpoint)
-    const mql = window.matchMedia('(max-width: 900px)');
-    function showMobileBtns(matches) {
-      document.querySelectorAll('.mobile-menu-btn').forEach(btn => {
-        btn.style.display = matches ? 'inline-flex' : 'none';
-      });
-    }
-    showMobileBtns(mql.matches);
-    mql.addEventListener('change', e => showMobileBtns(e.matches));
   });
 
   // Mobile nav toggle (hamburger) - robust, closes on link tap / outside / Esc + smooth anim

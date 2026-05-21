@@ -44,7 +44,7 @@
         <div class="container nav-content">
           <a href="index.html" class="logo">Invest<span>Match</span></a>
           
-          <div class="nav-links">
+          <div class="nav-links" id="nav-links-public">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="how-it-works.html">How it Works</a>
@@ -56,11 +56,17 @@
             <a href="login.html" class="btn btn-ghost">Log in</a>
             <a href="sign-up.html" class="btn btn-accent">Get Started</a>
             
+            <!-- Mobile hamburger -->
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-public')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; font-size:1.1rem; cursor:pointer;">☰</button>
+            
             <!-- Demo role switcher -->
             <div onclick="switchDemoRole()" style="cursor:pointer; margin-left:8px; font-size:0.75rem; padding:4px 10px; background:#f0edeb; border-radius:999px; display:flex; align-items:center; gap:4px;">
               <span id="demo-role">Demo: Guest</span>
             </div>
           </div>
+        </div>
+        <div class="mobile-nav-drawer" id="mobile-drawer-public" style="display:none; background:#fff; border-top:1px solid #eae8e6; padding:0.75rem 1rem;">
+          <!-- Populated by JS toggle if needed, links duplicated for mobile -->
         </div>
       </nav>
     `;
@@ -87,13 +93,15 @@
       <nav class="nav">
         <div class="container nav-content">
           <a href="index.html" class="logo">Invest<span>Match</span></a>
-          <div class="nav-links">
+          <div class="nav-links" id="nav-links-${role}">
             ${links}
           </div>
           <div class="nav-actions">
             ${actions}
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-${role}')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; font-size:1.1rem; cursor:pointer;">☰</button>
           </div>
         </div>
+        <div class="mobile-nav-drawer" id="mobile-drawer-${role}" style="display:none; background:#fff; border-top:1px solid #eae8e6; padding:0.75rem 1rem;"></div>
       </nav>
     `;
   }
@@ -295,6 +303,35 @@
     if (document.getElementById('footer-root')) {
       window.injectFooter();
     }
+    // Show mobile hamburger buttons on small screens
+    const mql = window.matchMedia('(max-width: 640px)');
+    function showMobileBtns(matches) {
+      document.querySelectorAll('.mobile-menu-btn').forEach(btn => {
+        btn.style.display = matches ? 'inline-block' : 'none';
+      });
+    }
+    showMobileBtns(mql.matches);
+    mql.addEventListener('change', e => showMobileBtns(e.matches));
   });
+
+  // Mobile nav toggle (hamburger)
+  window.toggleMobileNav = function(linkContainerId) {
+    const drawerId = linkContainerId.replace('nav-links', 'mobile-drawer');
+    const drawer = document.getElementById(drawerId);
+    if (!drawer) return;
+
+    if (drawer.style.display === 'block') {
+      drawer.style.display = 'none';
+      return;
+    }
+
+    // Clone the nav links into drawer for mobile
+    const linksContainer = document.getElementById(linkContainerId);
+    if (linksContainer) {
+      drawer.innerHTML = `<div style="display:flex; flex-direction:column; gap:0.5rem;">${linksContainer.innerHTML}</div>`;
+      // Re-bind any onclick if needed (demo switcher is separate)
+    }
+    drawer.style.display = 'block';
+  };
 
 })();

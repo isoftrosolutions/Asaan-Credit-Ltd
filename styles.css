@@ -62,10 +62,10 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1rem 0;
 }
 
-h1 { font-size: 3.5rem; line-height: 1.1; }
-h2 { font-size: 2.75rem; line-height: 1.15; }
-h3 { font-size: 1.875rem; line-height: 1.2; font-weight: 600; }
-h4 { font-size: 1.25rem; font-weight: 600; }
+h1 { font-size: clamp(1.9rem, 6vw, 3.5rem); line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 5vw, 2.75rem); line-height: 1.15; }
+h3 { font-size: clamp(1.25rem, 4vw, 1.875rem); line-height: 1.2; font-weight: 600; }
+h4 { font-size: 1.1rem; font-weight: 600; }
 
 p, .body-md {
   font-size: 1rem;
@@ -85,8 +85,190 @@ p, .body-md {
 
 @media (max-width: 768px) {
   .container { padding: 0 1rem; }
-  h1 { font-size: 2.25rem; }
+  /* h1/h2 now fluid via clamp() in base styles */
 }
+
+/* ============================================
+   MOBILE RESPONSIVENESS AUDIT FIXES (2026-05-21)
+   Mobile-first additions for 320px–768px breakpoints
+   ============================================ */
+
+@media (max-width: 640px) {
+  /* Reduce hero height and hide large decorative elements on mobile */
+  .hero { min-height: 480px !important; }
+  .hero-visual, .orbit-arc-hero { display: none !important; }
+
+  /* Nav: allow wrapping, tighten gaps */
+  .nav-content { height: auto; padding: 0.5rem 0; flex-wrap: wrap; }
+  .nav-links { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.75rem 1rem; 
+    width: 100%; 
+    margin-top: 0.25rem; 
+    font-size: 0.85rem; 
+  }
+  .nav-actions { flex-wrap: wrap; gap: 0.5rem; }
+
+  /* Cards: tighter padding on small screens */
+  .card { padding: 1rem 1.1rem; border-radius: 1.5rem; }
+  .pitch-card, .investor-card { gap: 0.75rem; }
+
+  /* Avatars scale down */
+  .avatar { width: 44px; height: 44px; font-size: 0.95rem; }
+  .avatar-sm { width: 32px; height: 32px; }
+
+  /* Forms and grids: force single column */
+  .form-grid,
+  .role-grid,
+  [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns: repeat(2"],
+  .profile-edit .form-grid,
+  .pitch-edit .form-grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 0.75rem !important; 
+  }
+
+  /* Stats grids: 2 columns max on phones */
+  .stats-grid,
+  [style*="grid-template-columns:repeat(4,1fr)"],
+  [style*="grid-template-columns:repeat(5,1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* Browse grids: use smaller min for better wrapping */
+  .browse-grid,
+  .about-grid,
+  .how-grid,
+  [style*="minmax(340px, 1fr)"],
+  [style*="minmax(320px, 1fr)"],
+  [style*="minmax(310px, 1fr)"],
+  [style*="minmax(300px,1fr)"],
+  [style*="minmax(260px, 1fr)"] {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  }
+
+  /* Pitch detail 2fr/1fr sidebar stack */
+  .pitch-detail-grid,
+  [style*="grid-template-columns:2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Public profile 1fr 1fr */
+  .profile-grid,
+  .two-col-teaser,
+  .public-investor-profile [style*="grid-template-columns:1fr 1fr"],
+  [style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Buttons and touch targets */
+  .btn { padding: 0.65rem 1.1rem; min-height: 44px; font-size: 0.9rem; }
+  .btn-sm { padding: 0.55rem 0.9rem; min-height: 40px; }
+
+  /* Tables: horizontal scroll container */
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* Filters row on browse: stack */
+  .browse-filters { flex-direction: column; }
+  .browse-filters input, .browse-filters select { max-width: 100%; width: 100%; }
+
+  /* Fixed width selects in browse filters */
+  .browse-entrepreneurs select[style*="width:180px"],
+  .browse-entrepreneurs select[style*="width:160px"] {
+    width: 100% !important;
+    max-width: 100%;
+  }
+
+  /* Reduce section padding */
+  .section { padding: 2.5rem 0; }
+
+  /* Auth containers tighter */
+  .auth-container { margin: 1.5rem 0.5rem; padding: 1.5rem; border-radius: 1.5rem; }
+
+  /* Dashboard main content tighter */
+  .main-content { padding-top: 1rem; }
+
+  /* Stat cards smaller text */
+  .stat-value { font-size: 1.35rem; }
+}
+
+@media (max-width: 480px) {
+  /* Even tighter for smallest phones */
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.25rem; }
+  .container { padding: 0 0.75rem; }
+
+  .card { padding: 0.85rem; }
+  
+  /* Force 1-col stats */
+  [style*="grid-template-columns:repeat(2, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Smaller nav text */
+  .nav-links a { font-size: 0.8rem; }
+
+  /* Make sure selects and inputs don't cause overflow */
+  .select, .input { font-size: 0.95rem; }
+}
+
+@media (max-width: 900px) {
+  /* Ensure dashboard always stacks below tablet (strengthen existing rule) */
+  .dashboard {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  .sidebar {
+    display: none !important; /* was already, but reinforce for all <900 */
+  }
+  /* Provide visual cue that nav is in top header */
+  .main-content::before {
+    content: "← Use top navigation for sections";
+    display: block;
+    font-size: 0.7rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Ensure no horizontal scroll globally */
+html, body { overflow-x: hidden; max-width: 100vw; }
+
+/* Improve tap targets for labels/pills */
+.tag, .verified-badge, .preference-tag, .step {
+  min-height: 28px;
+  min-width: 28px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Mobile hamburger & drawer (injected by components.js) */
+.mobile-menu-btn { 
+  border: 1.5px solid var(--outline-variant); 
+  border-radius: 0.5rem; 
+  padding: 4px 8px; 
+  font-size: 1.25rem; 
+  line-height: 1;
+}
+.mobile-nav-drawer { 
+  position: static; 
+  left: 0; 
+  right: 0; 
+  z-index: 150; 
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  border-radius: 0 0 1rem 1rem;
+  margin-top: 0;
+}
+.mobile-nav-drawer a { 
+  display: block; 
+  padding: 0.6rem 0.75rem; 
+  color: var(--on-surface-variant); 
+  text-decoration: none; 
+  border-radius: 0.5rem; 
+}
+.mobile-nav-drawer a:hover { background: var(--surface-container); }
 
 /* Navigation */
 .nav {

@@ -56,8 +56,8 @@
             <a href="login.html" class="btn btn-ghost">Log in</a>
             <a href="sign-up.html" class="btn btn-accent">Get Started</a>
             
-            <!-- Mobile hamburger -->
-            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-public')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; font-size:1.1rem; cursor:pointer;">☰</button>
+            <!-- Mobile hamburger (styled via CSS, shown via JS mql) -->
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-public', this)" aria-label="Menu">☰</button>
             
             <!-- Demo role switcher -->
             <div onclick="switchDemoRole()" style="cursor:pointer; margin-left:8px; font-size:0.75rem; padding:4px 10px; background:#f0edeb; border-radius:999px; display:flex; align-items:center; gap:4px;">
@@ -65,7 +65,7 @@
             </div>
           </div>
         </div>
-        <div class="mobile-nav-drawer" id="mobile-drawer-public" style="display:none; background:#fff; border-top:1px solid #eae8e6; padding:0.75rem 1rem;">
+        <div class="mobile-nav-drawer" id="mobile-drawer-public">
           <!-- Populated by JS toggle if needed, links duplicated for mobile -->
         </div>
       </nav>
@@ -98,10 +98,10 @@
           </div>
           <div class="nav-actions">
             ${actions}
-            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-${role}')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #ccc; border-radius:8px; padding:6px 10px; font-size:1.1rem; cursor:pointer;">☰</button>
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-${role}', this)" aria-label="Menu">☰</button>
           </div>
         </div>
-        <div class="mobile-nav-drawer" id="mobile-drawer-${role}" style="display:none; background:#fff; border-top:1px solid #eae8e6; padding:0.75rem 1rem;"></div>
+        <div class="mobile-nav-drawer" id="mobile-drawer-${role}"></div>
       </nav>
     `;
   }
@@ -119,10 +119,10 @@
           <div class="nav-actions">
             <a href="index.html" class="btn btn-ghost" style="color:#ccc; font-size:0.85rem; padding:0.5rem 0.9rem;">Exit to Public Site</a>
             <!-- Mobile hamburger for admin -->
-            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-admin')" aria-label="Menu" style="display:none; background:none; border:1.5px solid #555; border-radius:8px; padding:8px 10px; font-size:1.35rem; cursor:pointer; color:#ccc;">☰</button>
+            <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-admin', this)" aria-label="Menu">☰</button>
           </div>
         </div>
-        <div class="mobile-nav-drawer" id="mobile-drawer-admin" style="display:none; background:#1f1f1f; color:#ccc; border-top:1px solid #333; padding:0.75rem 1rem;"></div>
+        <div class="mobile-nav-drawer" id="mobile-drawer-admin"></div>
       </nav>
     `;
   }
@@ -310,45 +310,127 @@
     if (document.getElementById('footer-root')) {
       window.injectFooter();
     }
-    // Show mobile hamburger buttons on small screens
-    const mql = window.matchMedia('(max-width: 640px)');
+    // Show mobile hamburger buttons on small screens (sync with CSS 900px breakpoint)
+    const mql = window.matchMedia('(max-width: 900px)');
     function showMobileBtns(matches) {
       document.querySelectorAll('.mobile-menu-btn').forEach(btn => {
-        btn.style.display = matches ? 'inline-block' : 'none';
+        btn.style.display = matches ? 'inline-flex' : 'none';
       });
     }
     showMobileBtns(mql.matches);
     mql.addEventListener('change', e => showMobileBtns(e.matches));
   });
 
-  // Mobile nav toggle (hamburger)
-  window.toggleMobileNav = function(linkContainerId) {
+  // Mobile nav toggle (hamburger) - robust, closes on link tap / outside / Esc + smooth anim
+  window.toggleMobileNav = function(linkContainerId, btnEl) {
     const drawerId = linkContainerId.replace('nav-links', 'mobile-drawer');
     const drawer = document.getElementById(drawerId);
     if (!drawer) return;
 
-    const btn = event.currentTarget || null; // not always reliable from inline onclick
+    const isCurrentlyOpen = drawer.classList.contains('open') || drawer.style.display === 'block';
 
-    if (drawer.style.display === 'block') {
-      drawer.style.display = 'none';
-      // Try to restore hamburger icon if we can find sibling button
-      const headerNav = drawer.parentElement;
-      const ham = headerNav && headerNav.querySelector('.mobile-menu-btn');
-      if (ham) ham.textContent = '☰';
+    if (isCurrentlyOpen) {
+      // close with animation
+      drawer.classList.remove('open');
+      drawer.style.maxHeight = '0px';
+      drawer.style.opacity = '0';
+      if (btnEl) btnEl.textContent = '☰';
+      // clean up after transition
+      setTimeout(() => {
+        drawer.style.display = 'none';
+        drawer.style.maxHeight = '';
+        drawer.style.opacity = '';
+      }, 280);
       return;
     }
 
-    // Clone the nav links into drawer for mobile
+    // open: populate first
     const linksContainer = document.getElementById(linkContainerId);
-    if (linksContainer) {
-      drawer.innerHTML = `<div style="display:flex; flex-direction:column; gap:0.5rem;">${linksContainer.innerHTML}</div>`;
+    let contentHTML = '';
+    if (linksContainer && linksContainer.innerHTML.trim()) {
+      contentHTML = linksContainer.innerHTML;
+    } else if (linkContainerId.includes('admin')) {
+      // Fallback for admin (no desktop links): provide exit action in drawer
+      contentHTML = `<a href="index.html" style="color:#ccc;">← Exit to Public Site</a>`;
     }
-    drawer.style.display = 'block';
 
-    // Change hamburger to close icon
-    const headerNav = drawer.parentElement;
-    const ham = headerNav && headerNav.querySelector('.mobile-menu-btn');
-    if (ham) ham.textContent = '✕';
+    if (contentHTML) {
+      drawer.innerHTML = `<div style="display:flex; flex-direction:column; gap:0.25rem; padding:0.25rem 0;">${contentHTML}</div>`;
+    }
+
+    // prepare for anim
+    drawer.style.display = 'block';
+    drawer.style.maxHeight = '0px';
+    drawer.style.opacity = '0';
+
+    // trigger open in next frame for transition to run
+    requestAnimationFrame(() => {
+      drawer.classList.add('open');
+      // compute height for max-height anim (CSS has 420px cap but we set exact)
+      const targetH = Math.min(drawer.scrollHeight + 20, 420);
+      drawer.style.maxHeight = targetH + 'px';
+      drawer.style.opacity = '1';
+    });
+
+    if (btnEl) btnEl.textContent = '✕';
+
+    // Attach close handlers to newly added links (close after tap for UX)
+    drawer.querySelectorAll('a').forEach(a => {
+      const origHref = a.getAttribute('href');
+      a.addEventListener('click', (ev) => {
+        // close immediately for perceived speed (page will unload on real nav)
+        drawer.classList.remove('open');
+        drawer.style.maxHeight = '0px';
+        drawer.style.opacity = '0';
+        if (btnEl) btnEl.textContent = '☰';
+        setTimeout(() => {
+          drawer.style.display = 'none';
+          drawer.style.maxHeight = '';
+          drawer.style.opacity = '';
+        }, 150);
+        // if it was a logout style, let it proceed
+      }, { once: true });
+    });
+
+    // Outside click to close (capture phase)
+    const outsideClick = (ev) => {
+      const headerRoot = drawer.parentElement;
+      if (headerRoot && !headerRoot.contains(ev.target)) {
+        drawer.classList.remove('open');
+        drawer.style.maxHeight = '0px';
+        drawer.style.opacity = '0';
+        if (btnEl) btnEl.textContent = '☰';
+        setTimeout(() => {
+          drawer.style.display = 'none';
+          drawer.style.maxHeight = '';
+          drawer.style.opacity = '';
+        }, 280);
+        document.removeEventListener('click', outsideClick, true);
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    // delay attach to not fire on the ham click itself
+    setTimeout(() => {
+      document.addEventListener('click', outsideClick, true);
+    }, 120);
+
+    // Esc key close
+    const escHandler = (ev) => {
+      if (ev.key === 'Escape') {
+        drawer.classList.remove('open');
+        drawer.style.maxHeight = '0px';
+        drawer.style.opacity = '0';
+        if (btnEl) btnEl.textContent = '☰';
+        setTimeout(() => {
+          drawer.style.display = 'none';
+          drawer.style.maxHeight = '';
+          drawer.style.opacity = '';
+        }, 280);
+        document.removeEventListener('click', outsideClick, true);
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler, { once: true });
   };
 
 })();

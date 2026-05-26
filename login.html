@@ -52,9 +52,10 @@
     <!-- Demo helpers -->
     <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid #eee; font-size:0.8rem; color:#666;">
       <strong>Demo logins (click to auto-fill):</strong><br>
-      <span onclick="quickLogin('investor')" style="cursor:pointer; color:#cf4500;">Verified Investor</span> • 
-      <span onclick="quickLogin('entrepreneur')" style="cursor:pointer; color:#cf4500;">Verified Entrepreneur</span> • 
-      <span onclick="quickLogin('admin')" style="cursor:pointer; color:#cf4500;">Admin</span>
+      <span onclick="quickLogin('investor')" style="cursor:pointer; color:#cf4500;">Investor</span> • 
+      <span onclick="quickLogin('owner')" style="cursor:pointer; color:#cf4500;">Business Owner</span> • 
+      <span onclick="quickLogin('admin')" style="cursor:pointer; color:#cf4500;">Admin</span> •
+      <span onclick="quickLogin('advisor')" style="cursor:pointer; color:#cf4500;">Advisor</span>
     </div>
   </div>
 
@@ -62,24 +63,26 @@
     function handleLogin(e) {
       e.preventDefault();
       const role = localStorage.getItem('demoRole') || 'investor';
-      if (role === 'admin') {
-        window.location.href = 'admin.html';
-      } else if (role === 'entrepreneur') {
-        window.location.href = 'entrepreneur-dashboard.html';
-      } else {
-        window.location.href = 'investor-dashboard.html';
-      }
+      const targets = {
+        admin: 'admin.html',
+        owner: 'business-owner-dashboard.html',
+        entrepreneur: 'business-owner-dashboard.html',
+        advisor: 'investor-dashboard.html',
+        investor: 'investor-dashboard.html'
+      };
+      window.location.href = targets[role] || 'investor-dashboard.html';
     }
     
     function quickLogin(type) {
       localStorage.setItem('demoRole', type);
-      if (type === 'admin') {
-        window.location.href = 'admin.html';
-      } else if (type === 'entrepreneur') {
-        window.location.href = 'entrepreneur-dashboard.html';
-      } else {
-        window.location.href = 'investor-dashboard.html';
-      }
+      const targets = {
+        admin: 'admin.html',
+        owner: 'business-owner-dashboard.html',
+        entrepreneur: 'business-owner-dashboard.html',
+        advisor: 'investor-dashboard.html',
+        investor: 'investor-dashboard.html'
+      };
+      window.location.href = targets[type] || 'investor-dashboard.html';
     }
   </script>
 </body>

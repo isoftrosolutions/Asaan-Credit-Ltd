@@ -42,13 +42,23 @@
       <div class="role-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.5rem 0;">
         <div onclick="selectRole(this, 'investor')" class="role-card" id="role-investor">
           <div style="font-size:2rem; margin-bottom:0.5rem;">💰</div>
-          <strong>Investor</strong>
-          <div style="font-size:0.85rem; color:#666;">Angel, HNI, VC or family office looking for deals</div>
+          <strong>Investor / Buyer</strong>
+          <div style="font-size:0.85rem; color:#666;">Angel, HNI, VC, PE, family office, or corporate acquirer</div>
         </div>
-        <div onclick="selectRole(this, 'entrepreneur')" class="role-card" id="role-entrepreneur">
-          <div style="font-size:2rem; margin-bottom:0.5rem;">🚀</div>
-          <strong>Entrepreneur</strong>
-          <div style="font-size:0.85rem; color:#666;">Founder with a pitch seeking capital in Nepal</div>
+        <div onclick="selectRole(this, 'owner')" class="role-card" id="role-owner">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">🏢</div>
+          <strong>Business Owner</strong>
+          <div style="font-size:0.85rem; color:#666;">Selling your business, seeking investment, or a loan</div>
+        </div>
+        <div onclick="selectRole(this, 'franchisor')" class="role-card" id="role-franchisor">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">🍟</div>
+          <strong>Franchisor / Brand</strong>
+          <div style="font-size:0.85rem; color:#666;">Expanding your brand through franchise partners</div>
+        </div>
+        <div onclick="selectRole(this, 'advisor')" class="role-card" id="role-advisor">
+          <div style="font-size:2rem; margin-bottom:0.5rem;">📋</div>
+          <strong>Advisor / Broker</strong>
+          <div style="font-size:0.85rem; color:#666;">M&amp;A advisor, business broker, consultant, law firm</div>
         </div>
       </div>
       
@@ -199,11 +209,13 @@
     
     function finishWelcome(role) {
       document.getElementById('welcome-modal').remove();
-      if (role === 'entrepreneur') {
-        window.location.href = 'pitch-edit.html';
-      } else {
-        window.location.href = 'profile-edit.html';
-      }
+      const targets = {
+        investor: 'profile-edit.html',
+        owner: 'pitch-edit.html',
+        franchisor: 'pitch-edit.html',
+        advisor: 'profile-edit.html'
+      };
+      window.location.href = targets[role] || 'profile-edit.html';
     }
     
     // Pre-select investor for convenience

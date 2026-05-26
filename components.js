@@ -35,12 +35,11 @@
 
   function createPublicHeader() {
     return `
-      <nav class="nav">
+      <nav class="nav nav-premium">
         <div class="container nav-content">
           <a href="index.html" class="logo">Invest<span>Match</span></a>
 
           <div class="nav-links" id="nav-links-public">
-            <a href="index.html">Home</a>
             <div class="nav-dropdown">
               <a href="browse-businesses.html" class="dropdown-trigger">Businesses ${icons.chevronDown}</a>
               <div class="dropdown-menu">
@@ -50,21 +49,9 @@
                 <a href="browse-businesses.html?type=asset">Assets For Sale</a>
               </div>
             </div>
+            <a href="browse-investors.html">Investors</a>
             <a href="browse-franchises.html">Franchises</a>
-            <a href="browse-investors.html">Investors &amp; Buyers</a>
-            <div class="nav-dropdown">
-              <a href="how-it-works.html" class="dropdown-trigger">How To ${icons.chevronDown}</a>
-              <div class="dropdown-menu">
-                <a href="how-it-works.html#sell">Sell Your Business</a>
-                <a href="how-it-works.html#invest">Find Investors</a>
-                <a href="how-it-works.html#franchise">Franchise Your Business</a>
-                <a href="how-it-works.html#buy">Buy a Business</a>
-                <a href="how-it-works.html#invest">Invest in a Business</a>
-                <a href="how-it-works.html#advisor">Register as an Advisor</a>
-                <a href="business-valuation.html">Value a Business</a>
-              </div>
-            </div>
-            <a href="support.html">Q &amp; A</a>
+            <a href="how-it-works.html">How It Works</a>
             <div class="nav-dropdown">
               <a href="about.html" class="dropdown-trigger">Company ${icons.chevronDown}</a>
               <div class="dropdown-menu">
@@ -79,26 +66,14 @@
           </div>
 
           <div class="nav-actions">
-            <button class="nav-icon-btn" onclick="alert('Country switcher (demo)')" aria-label="Currency">${icons.globe} <span style="font-size:0.8rem;">NPR</span></button>
-            <button class="nav-icon-btn" onclick="alert('Search (demo)')" aria-label="Search">${icons.search}</button>
-            <a href="login.html" class="btn btn-ghost btn-sm">Log in</a>
-            <a href="sign-up.html" class="btn btn-accent btn-sm">Register</a>
-
-            <div class="nav-dropdown add-profile-dropdown">
-              <button class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:4px;">${icons.plus} Add Profile</button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <a href="create-business-profile.html">Create Business Profile</a>
-                <a href="create-investor-profile.html">Create Investor Profile</a>
-                <a href="create-franchise-profile.html">Create Franchise Profile</a>
-                <a href="create-advisor-profile.html">Create Advisor Profile</a>
-              </div>
-            </div>
+            <button class="lang-btn" onclick="alert('Language switcher (demo)')" aria-label="Language">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+              <span>EN</span>
+            </button>
+            <a href="login.html" class="btn btn-ghost btn-sm" style="font-size:0.88rem; font-weight:600;">Log in</a>
+            <a href="sign-up.html" class="btn-premium btn-sm" style="padding:0.55rem 1.35rem;">Get Started Free</a>
 
             <button class="mobile-menu-btn" onclick="toggleMobileNav('nav-links-public', this)" aria-label="Menu">☰</button>
-
-            <button class="demo-role-pill" onclick="switchDemoRole()" aria-label="Switch demo role">
-              <span id="demo-role">Demo: Guest</span>
-            </button>
           </div>
         </div>
         <div class="mobile-nav-drawer" id="mobile-drawer-public"></div>
@@ -292,10 +267,14 @@
 
   function createFooter() {
     return `
-      <footer class="footer">
+      <footer class="footer-premium">
         <div class="container">
-          <div class="footer-grid">
-            <div class="footer-col">
+          <div class="footer-premium-grid">
+            <div class="footer-premium-col">
+              <div class="footer-premium-brand">Invest<span>Match</span></div>
+              <p class="footer-premium-desc">The premium marketplace for buying, selling, franchising, and funding SMEs. Connecting verified business owners with qualified investors.</p>
+            </div>
+            <div class="footer-premium-col">
               <h5>Get Started</h5>
               <a href="how-it-works.html#sell">Sell Your Business</a>
               <a href="how-it-works.html#invest">Finance Your Business</a>
@@ -304,14 +283,14 @@
               <a href="how-it-works.html#franchise">Franchise Your Business</a>
               <a href="sign-up.html">Register as Advisor</a>
             </div>
-            <div class="footer-col">
+            <div class="footer-premium-col">
               <h5>Businesses</h5>
               <a href="browse-businesses.html">Businesses For Sale</a>
               <a href="browse-businesses.html?type=investment">Investment Opportunities</a>
               <a href="browse-businesses.html?type=loan">Businesses Seeking Loan</a>
               <a href="browse-businesses.html?type=asset">Assets For Sale</a>
             </div>
-            <div class="footer-col">
+            <div class="footer-premium-col">
               <h5>Investors</h5>
               <a href="browse-investors.html">Individual Investors</a>
               <a href="browse-investors.html?type=buyer">Business Buyers</a>
@@ -320,20 +299,7 @@
               <a href="browse-investors.html?type=pe">Private Equity Firms</a>
               <a href="browse-investors.html?type=fund">Family Offices &amp; Funds</a>
             </div>
-            <div class="footer-col">
-              <h5>Valuation &amp; Advisors</h5>
-              <a href="business-valuation.html">Business Valuation Calculator</a>
-              <a href="how-it-works.html#advisor">M&amp;A Advisors</a>
-              <a href="how-it-works.html#advisor">Business Brokers</a>
-              <a href="how-it-works.html#advisor">Financial Consultants</a>
-              <a href="how-it-works.html#advisor">Law Firms</a>
-            </div>
-            <div class="footer-col">
-              <h5>Franchise</h5>
-              <a href="browse-franchises.html">Franchises For Sale</a>
-              <a href="browse-franchises.html">Franchise Investors</a>
-            </div>
-            <div class="footer-col">
+            <div class="footer-premium-col">
               <h5>Company</h5>
               <a href="about.html">About</a>
               <a href="about.html#testimonials">Testimonials</a>
@@ -343,14 +309,14 @@
               <a href="legal.html">Terms of Use</a>
             </div>
           </div>
-          <div class="footer-bottom">
+          <div class="footer-premium-bottom">
             <div>© 2026 InvestMatch Nepal • iSoftro Solutions</div>
-            <div class="footer-social">
-              <a href="#" aria-label="Facebook">FB</a>
-              <a href="#" aria-label="LinkedIn">LI</a>
-              <a href="#" aria-label="YouTube">YT</a>
+            <div class="footer-premium-social">
+              <a href="#" aria-label="Facebook">Facebook</a>
+              <a href="#" aria-label="LinkedIn">LinkedIn</a>
+              <a href="#" aria-label="YouTube">YouTube</a>
               <a href="#" aria-label="Twitter">X</a>
-              <a href="#" aria-label="Instagram">IG</a>
+              <a href="#" aria-label="Instagram">Instagram</a>
             </div>
           </div>
         </div>
@@ -379,6 +345,10 @@
       drawer.style.maxHeight = '0px';
       drawer.style.opacity = '0';
       if (btnEl) btnEl.textContent = '☰';
+      if (window.__navOutsideCloseHandler) {
+        document.removeEventListener('click', window.__navOutsideCloseHandler);
+        window.__navOutsideCloseHandler = null;
+      }
       setTimeout(() => { drawer.style.display = 'none'; }, 280);
       return;
     }
@@ -453,8 +423,29 @@
         drawer.style.maxHeight = '0px';
         drawer.style.opacity = '0';
         if (btnEl) btnEl.textContent = '☰';
+        if (window.__navOutsideCloseHandler) {
+          document.removeEventListener('click', window.__navOutsideCloseHandler);
+          window.__navOutsideCloseHandler = null;
+        }
         setTimeout(() => { drawer.style.display = 'none'; }, 150);
       }, { once: true });
     });
+
+    window.__navOutsideCloseHandler = function(e) {
+      const clickInsideDrawer = drawer.contains(e.target);
+      const clickOnBtn = btnEl && btnEl.contains(e.target);
+      if (!clickInsideDrawer && !clickOnBtn) {
+        drawer.classList.remove('open');
+        drawer.style.maxHeight = '0px';
+        drawer.style.opacity = '0';
+        if (btnEl) btnEl.textContent = '☰';
+        document.removeEventListener('click', window.__navOutsideCloseHandler);
+        window.__navOutsideCloseHandler = null;
+        setTimeout(() => { drawer.style.display = 'none'; }, 150);
+      }
+    };
+    setTimeout(() => {
+      document.addEventListener('click', window.__navOutsideCloseHandler);
+    }, 0);
   };
 })();

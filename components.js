@@ -386,7 +386,48 @@
     const linksContainer = document.getElementById(linkContainerId);
     let contentHTML = '';
     if (linksContainer && linksContainer.innerHTML.trim()) {
-      contentHTML = linksContainer.innerHTML;
+      // Flatten dropdown menus: extract links from .dropdown-menu and remove wrapping
+      const temp = document.createElement('div');
+      temp.innerHTML = linksContainer.innerHTML;
+      temp.querySelectorAll('.nav-dropdown').forEach(dd => {
+        const ddLinks = dd.querySelectorAll('.dropdown-menu a');
+        const flatDiv = document.createElement('div');
+        flatDiv.style.cssText = 'padding-left:1rem; border-left:2px solid var(--surface-container-high); margin:0.25rem 0;';
+        ddLinks.forEach(link => {
+          const clone = document.createElement('a');
+          clone.href = link.getAttribute('href');
+          clone.textContent = link.textContent;
+          clone.style.fontSize = '0.85rem';
+          clone.style.padding = '0.5rem 0.9rem';
+          clone.style.display = 'flex';
+          clone.style.alignItems = 'center';
+          clone.style.minHeight = '40px';
+          clone.style.color = 'var(--on-surface-variant)';
+          clone.style.textDecoration = 'none';
+          clone.style.borderRadius = '0.5rem';
+          flatDiv.appendChild(clone);
+        });
+        // Replace the dropdown trigger with the parent link, then append sub-links
+        const trigger = dd.querySelector('.dropdown-trigger');
+        if (trigger) {
+          const parentLink = document.createElement('a');
+          parentLink.href = trigger.getAttribute('href');
+          parentLink.textContent = trigger.textContent.replace(/▼/g, '').trim();
+          parentLink.style.fontWeight = '600';
+          parentLink.style.display = 'flex';
+          parentLink.style.alignItems = 'center';
+          parentLink.style.padding = '0.75rem 0.9rem';
+          parentLink.style.minHeight = '44px';
+          parentLink.style.color = 'var(--on-surface-variant)';
+          parentLink.style.textDecoration = 'none';
+          parentLink.style.borderRadius = '0.5rem';
+          dd.parentNode.replaceChild(parentLink, dd);
+          parentLink.insertAdjacentElement('afterend', flatDiv);
+        } else {
+          dd.parentNode.replaceChild(flatDiv, dd);
+        }
+      });
+      contentHTML = temp.innerHTML;
     }
 
     drawer.innerHTML = contentHTML
@@ -399,7 +440,7 @@
 
     requestAnimationFrame(() => {
       drawer.classList.add('open');
-      const targetH = Math.min(drawer.scrollHeight + 20, 420);
+      const targetH = Math.min(drawer.scrollHeight + 20, 600);
       drawer.style.maxHeight = targetH + 'px';
       drawer.style.opacity = '1';
     });

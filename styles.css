@@ -115,14 +115,37 @@ p, .body-md {
     padding: 0.4rem 0.6rem;
   }
 
-  /* Shrink nav-actions at very small screens to prevent overflow */
-  @media (max-width: 420px) {
-    .demo-role-pill { display: none !important; }
-    .nav-actions { gap: 0.2rem; }
-    .nav-actions .btn { font-size: 0.75rem; padding: 0.4rem 0.6rem; min-height: 36px; }
+  /* Hide decorative nav icons (globe, search) on mobile */
+  .nav-icon-btn { display: none !important; }
+
+  /* Hide "Add Profile" button text on mobile, show only plus */
+  .add-profile-dropdown .btn {
+    font-size: 0 !important;
+    padding: 0.4rem 0.5rem !important;
   }
-  @media (max-width: 360px) {
-    .nav-actions .btn { font-size: 0.7rem; padding: 0.35rem 0.5rem; min-height: 34px; }
+  .add-profile-dropdown .btn svg {
+    width: 18px;
+    height: 18px;
+    font-size: initial;
+  }
+
+  /* Shrink nav-actions at very small screens to prevent overflow */
+  @media (max-width: 480px) {
+    .add-profile-dropdown { display: none !important; }
+    .nav-actions .btn-accent { 
+      padding: 0.4rem 0.6rem; 
+      font-size: 0.7rem; 
+    }
+    .nav-actions { gap: 0.2rem; }
+  }
+  @media (max-width: 400px) {
+    .demo-role-pill { display: none !important; }
+    .nav-actions .btn-ghost { display: none !important; }
+    .nav-actions .btn-accent { 
+      padding: 0.35rem 0.5rem; 
+      font-size: 0.65rem;
+      min-height: 34px;
+    }
     .nav-actions { gap: 0.15rem; }
   }
 
@@ -236,13 +259,8 @@ p, .body-md {
   .sidebar {
     display: none !important; /* was already, but reinforce for all <900 */
   }
-  /* Provide visual cue that nav is in top header */
   .main-content::before {
-    content: "← Use top navigation for sections";
-    display: block;
-    font-size: 0.7rem;
-    color: #888;
-    margin-bottom: 0.5rem;
+    display: none;
   }
 }
 
@@ -303,7 +321,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
               opacity 0.2s ease;
 }
 .mobile-nav-drawer.open {
-  max-height: 420px; /* sufficient for 6-7 links */
+  max-height: 600px;
   opacity: 1;
 }
 .mobile-nav-drawer a { 
@@ -316,6 +334,7 @@ html, body { overflow-x: hidden; max-width: 100vw; }
   border-radius: 0.5rem; 
   font-size: 0.95rem;
 }
+.mobile-nav-drawer a:hover { background: var(--surface-container); }
 .mobile-nav-drawer a:hover { background: var(--surface-container); }
 
 /* Admin dark drawer */

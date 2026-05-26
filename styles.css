@@ -1666,18 +1666,13 @@ textarea {
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px) scale(0.98);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none;
 }
 
-.nav-premium .nav-dropdown:hover .dropdown-menu {
+.nav-premium .dropdown-menu.open {
   opacity: 1;
   visibility: visible;
   transform: translateY(4px) scale(1);
-  pointer-events: auto;
 }
 
 .nav-premium .dropdown-menu a {

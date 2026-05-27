@@ -108,7 +108,9 @@
         <div class="container">
           <div class="footer-premium-grid">
             <div class="footer-premium-col">
-              <div class="footer-premium-brand">Invest<span>Match</span></div>
+              <div class="footer-premium-brand">
+                <img src="logo.jpeg" alt="InvestMatch" style="height:48px;width:auto;display:block;margin-bottom:0.75rem;">
+              </div>
               <p class="footer-premium-desc">The premium marketplace for buying, selling, franchising, and funding SMEs. Connecting verified business owners with qualified investors.</p>
             </div>
             <div class="footer-premium-col">

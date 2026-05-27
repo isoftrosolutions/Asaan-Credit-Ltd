@@ -44,7 +44,9 @@
     return `
       <nav class="im-header im-header-premium">
         <div class="container im-header-content">
-          <a href="index.html" class="im-logo">Invest<span>Match</span></a>
+          <a href="index.html" class="im-logo" id="logo-link">
+            <img src="logo.jpeg" alt="InvestMatch" style="height:48px;width:auto;">
+          </a>
 
           <div class="im-nav-links" id="nav-links-public">
             <div class="im-nav-dropdown">
@@ -111,7 +113,9 @@
     return `
       <nav class="im-header">
         <div class="container im-header-content">
-          <a href="index.html" class="im-logo">Invest<span>Match</span></a>
+          <a href="index.html" class="im-logo">
+            <img src="logo.jpeg" alt="InvestMatch" style="height:48px;width:auto;">
+          </a>
           <div class="im-nav-links" id="nav-links-dashboard">
             ${links}
           </div>
@@ -129,7 +133,9 @@
     return `
       <nav class="im-header im-header-admin">
         <div class="container im-header-content">
-          <a href="index.html" class="im-logo">Invest<span>Match</span> <span class="im-badge">ADMIN</span></a>
+          <a href="index.html" class="im-logo">
+            <img src="logo.jpeg" alt="InvestMatch" style="height:48px;width:auto;">
+          </a>
           <div class="im-nav-links" id="nav-links-admin"></div>
           <div class="im-nav-actions">
             <a href="index.html" class="im-btn im-btn-ghost">Exit to Public Site</a>

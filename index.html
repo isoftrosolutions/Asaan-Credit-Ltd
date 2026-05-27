@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>InvestMatch — Connect with Investors. Sell or Grow Your Business Faster.</title>
   <meta name="description" content="The premium marketplace for buying, selling, franchising, and funding SMEs. Connect with 67,500+ verified businesses and 44,000+ investors.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="header.css">
 </head>
@@ -17,8 +20,8 @@
 
   <!-- ===== HERO SECTION ===== -->
   <header class="hero-premium">
-    <div class="gradient-blob" style="top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,107,0,0.08),transparent 70%);"></div>
-    <div class="gradient-blob" style="bottom:-30%;left:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,0,0.05),transparent 70%);"></div>
+    <div class="gradient-blob" style="top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(196,30,58,0.08),transparent 70%);"></div>
+    <div class="gradient-blob" style="bottom:-30%;left:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(30,58,138,0.05),transparent 70%);"></div>
     <div class="container" style="position:relative;z-index:2;">
       <div style="display:flex;align-items:center;gap:4rem;justify-content:space-between;">
 
@@ -39,12 +42,12 @@
           </p>
 
           <div class="hero-actions">
-            <a href="sign-up.html" class="btn-premium" style="padding:0.75rem 2rem;font-size:1rem;">
+            <a href="sign-up.html" class="btn btn-primary btn-lg">
               Get Started Free
             </a>
-            <a href="browse-businesses.html" class="btn-premium-outline" style="padding:0.75rem 1.75rem;font-size:0.95rem;">
+            <a href="browse-businesses.html" class="btn btn-outline btn-lg">
               Browse Opportunities
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
 
@@ -201,7 +204,7 @@
       </div>
       <div class="feature-cards-grid">
         <a href="sign-up.html" class="feature-card-premium">
-          <div class="feature-card-icon" style="background:var(--orange-light);color:var(--orange);">
+          <div class="feature-card-icon" style="background:rgba(196,30,58,0.1);color:var(--brand-red);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
           </div>
           <h3>Sell Your Business</h3>
@@ -212,7 +215,7 @@
           </span>
         </a>
         <a href="browse-businesses.html" class="feature-card-premium">
-          <div class="feature-card-icon" style="background:#dbeafe;color:#2563eb;">
+          <div class="feature-card-icon" style="background:rgba(30,58,138,0.1);color:var(--brand-blue);">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           </div>
           <h3>Find Investment Opportunities</h3>
@@ -223,7 +226,7 @@
           </span>
         </a>
         <a href="browse-franchises.html" class="feature-card-premium">
-          <div class="feature-card-icon" style="background:#f3e8ff;color:#7c3aed;">
+          <div class="feature-card-icon" style="background:rgba(245,158,11,0.1);color:#B45309;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           </div>
           <h3>Start a Franchise</h3>
@@ -273,9 +276,9 @@
           <h2>Featured Businesses</h2>
           <p>Hand-picked opportunities from verified business owners.</p>
         </div>
-        <a href="browse-businesses.html" class="btn-premium-outline" style="flex-shrink:0;">
+        <a href="browse-businesses.html" class="btn btn-outline" style="flex-shrink:0;">
           View All
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
 
@@ -283,23 +286,20 @@
         <div class="card-premium" onclick="location.href='business-detail.html'" style="flex:0 0 300px;">
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
             <span class="badge-premium badge-sale">Business for Sale</span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              9.3
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;">9.3</span>
           </div>
           <h4 style="margin:0 0 0.35rem;font-size:1rem;font-weight:700;color:var(--dark);">Enterprise Software Co.</h4>
           <p style="font-size:0.82rem;color:var(--secondary-text);margin:0 0 0.75rem;line-height:1.5;">Cloud B2B SaaS. 200+ clients across 12 countries. NPR 12 Cr revenue.</p>
           <div style="display:flex;gap:4px;margin-bottom:0.75rem;">
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Email
             </span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Phone
             </span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               LinkedIn
             </span>
@@ -307,26 +307,23 @@
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border-subtle);">
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">Run Rate</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">NPR 12 Cr</span></div>
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">EBITDA</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">15-20%</span></div>
-            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--orange);">Asking NPR 12 Cr</strong></div>
+            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--brand-red);">Asking NPR 12 Cr</strong></div>
           </div>
         </div>
 
         <div class="card-premium" onclick="location.href='business-detail.html'" style="flex:0 0 300px;">
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
             <span class="badge-premium badge-partial">Partial Stake</span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              7.5
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;">7.5</span>
           </div>
           <h4 style="margin:0 0 0.35rem;font-size:1rem;font-weight:700;color:var(--dark);">Hotel Equity Stake</h4>
           <p style="font-size:0.82rem;color:var(--secondary-text);margin:0 0 0.75rem;line-height:1.5;">3-star hotel, 40 rooms, 75% occupancy. 10+ years established.</p>
           <div style="display:flex;gap:4px;margin-bottom:0.75rem;">
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Email
             </span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Phone
             </span>
@@ -334,26 +331,23 @@
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border-subtle);">
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">Run Rate</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">NPR 20 Lakh</span></div>
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">EBITDA</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">0-10%</span></div>
-            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--orange);">30% Stake NPR 3 Cr</strong></div>
+            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--brand-red);">30% Stake NPR 3 Cr</strong></div>
           </div>
         </div>
 
         <div class="card-premium" onclick="location.href='business-detail.html'" style="flex:0 0 300px;">
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:0.75rem;">
             <span class="badge-premium badge-loan">Business Loan</span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              8.1
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;">8.1</span>
           </div>
           <h4 style="margin:0 0 0.35rem;font-size:1rem;font-weight:700;color:var(--dark);">Manufacturing Expansion</h4>
           <p style="font-size:0.82rem;color:var(--secondary-text);margin:0 0 0.75rem;line-height:1.5;">Food processing, 15+ years, 200+ employees. Seeking growth debt.</p>
           <div style="display:flex;gap:4px;margin-bottom:0.75rem;">
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Email
             </span>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--bg-subtle);padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;color:var(--secondary-text);">
+            <span class="badge" style="background:var(--bg-subtle);color:var(--secondary-text);padding:2px 8px;font-size:0.68rem;font-weight:600;">
               <svg viewBox="0 0 24 24" fill="none" stroke="#166534" stroke-width="2.5" width="10" height="10"><path d="M5 13l4 4L19 7"/></svg>
               Google
             </span>
@@ -361,7 +355,7 @@
           <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;padding-top:0.75rem;border-top:1px solid var(--border-subtle);">
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">Run Rate</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">NPR 8 Cr</span></div>
             <div><span style="font-size:0.68rem;font-weight:600;color:var(--muted-text);display:block;">EBITDA</span><span style="font-size:0.85rem;font-weight:700;color:var(--dark);">10-15%</span></div>
-            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--orange);">Loan NPR 6 Cr at 9%</strong></div>
+            <div style="width:100%;padding-top:0.5rem;"><strong style="font-size:1rem;color:var(--brand-red);">Loan NPR 6 Cr at 9%</strong></div>
           </div>
         </div>
       </div>
@@ -376,24 +370,21 @@
           <h2>Featured Investors &amp; Buyers</h2>
           <p>Pre-verified individuals and funds actively looking for deals.</p>
         </div>
-        <a href="browse-investors.html" class="btn-premium-outline" style="flex-shrink:0;">
+        <a href="browse-investors.html" class="btn btn-outline" style="flex-shrink:0;">
           View All
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
 
       <div class="carousel-premium">
         <div class="card-premium" onclick="location.href='public-investor-profile.html'" style="flex:0 0 300px;cursor:pointer;">
           <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--orange-dark));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">RT</div>
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--brand-red),#A91830);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">RT</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:0.9rem;color:var(--dark);">Ramesh Thapa</div>
               <div style="font-size:0.75rem;color:var(--secondary-text);">Angel Investor • Kathmandu</div>
             </div>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              8.6
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;flex-shrink:0;">8.6</span>
           </div>
           <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
             <span style="display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;">
@@ -419,15 +410,12 @@
 
         <div class="card-premium" onclick="location.href='public-investor-profile.html'" style="flex:0 0 300px;cursor:pointer;">
           <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-            <div style="width:40px;height:40px;border-radius:50%;background:#2563eb;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">HS</div>
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--brand-blue);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">HS</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:0.9rem;color:var(--dark);">Himalayan Seed Fund</div>
               <div style="font-size:0.75rem;color:var(--secondary-text);">VC Firm • Pokhara</div>
             </div>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              9.1
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;flex-shrink:0;">9.1</span>
           </div>
           <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
             <span style="display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;">
@@ -449,15 +437,12 @@
 
         <div class="card-premium" onclick="location.href='public-investor-profile.html'" style="flex:0 0 300px;cursor:pointer;">
           <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-            <div style="width:40px;height:40px;border-radius:50%;background:#7c3aed;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">SK</div>
+            <div style="width:40px;height:40px;border-radius:50%;background:#B45309;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">SK</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:0.9rem;color:var(--dark);">Sunita Koirala</div>
               <div style="font-size:0.75rem;color:var(--secondary-text);">Corporate Buyer • Biratnagar</div>
             </div>
-            <span style="display:inline-flex;align-items:center;gap:3px;background:var(--orange-light);color:var(--orange);font-size:0.7rem;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0;">
-              <svg viewBox="0 0 24 24" fill="currentColor" width="10" height="10"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-              7.8
-            </span>
+            <span class="rating-badge" style="font-size:0.7rem;padding:2px 8px;flex-shrink:0;">7.8</span>
           </div>
           <div style="display:flex;gap:4px;margin-bottom:0.5rem;">
             <span style="display:inline-flex;align-items:center;gap:3px;background:#dcfce7;color:#166534;padding:2px 8px;border-radius:999px;font-size:0.68rem;font-weight:600;">
@@ -593,10 +578,10 @@
       </div>
 
       <div style="text-align:center;margin-top:2rem;">
-        <a href="support.html" class="btn-premium-outline">
-          View all FAQs
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+          <a href="support.html" class="btn btn-outline">
+            View all FAQs
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
       </div>
     </div>
   </section>
@@ -608,10 +593,10 @@
         <h2>Ready to grow your business?</h2>
         <p>Join 67,500+ business owners and 44,000+ investors already on the platform.</p>
         <div class="cta-premium-actions">
-          <a href="sign-up.html" class="btn-premium" style="padding:0.8rem 2.25rem;font-size:1.05rem;">
+          <a href="sign-up.html" class="btn btn-primary btn-lg">
             Get Started Free
           </a>
-          <a href="browse-businesses.html" class="btn-premium-outline" style="border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);padding:0.8rem 2rem;">
+          <a href="browse-businesses.html" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.9);">
             Browse Listings
           </a>
         </div>

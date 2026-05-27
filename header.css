@@ -1,19 +1,20 @@
 /**
- * InvestMatch Nepal — Modular Header Styles
- * Agency-grade vanilla CSS implementation
+ * Asaan Export Import Pvt Ltd — Modular Header Styles
+ * Red/Navy brand design system
  */
 
 .im-header {
   --h-bg: rgba(255, 255, 255, 0.96);
-  --h-border: #ececec;
-  --h-height: 72px;
-  --h-ink: #141413;
-  --h-accent: #ff6b00;
-  --h-text: #464742;
-  --h-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
-  
+  --h-border: #E2E8F0;
+  --h-height: 80px;
+  --h-ink: #0F172A;
+  --h-accent: #C41E3A;
+  --h-text: #64748B;
+  --h-shadow: 0 4px 6px -1px rgba(15,23,42,0.06);
+
   background: var(--h-bg);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--h-border);
   position: sticky;
   top: 0;
@@ -24,15 +25,21 @@
   transition: all 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .im-header {
+    height: 64px;
+  }
+}
+
 .im-header-premium {
   --h-bg: rgba(255, 255, 255, 0.85);
 }
 
 .im-header-admin {
-  --h-bg: #141413;
-  --h-border: #333;
+  --h-bg: #0F172A;
+  --h-border: #1E293B;
   --h-ink: #ffffff;
-  --h-text: #cccccc;
+  --h-text: #94A3B8;
 }
 
 .im-header-content {
@@ -52,6 +59,12 @@
   display: flex;
   align-items: center;
   line-height: 1;
+  gap: 8px;
+}
+
+.im-logo img {
+  height: 48px;
+  width: auto;
 }
 
 .im-logo span {
@@ -60,7 +73,7 @@
 
 .im-logo .im-badge {
   font-size: 0.65rem;
-  background: #333;
+  background: var(--h-ink);
   color: #fff;
   padding: 2px 6px;
   border-radius: 4px;
@@ -91,6 +104,25 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  position: relative;
+}
+
+.im-nav-links a::after,
+.im-dropdown-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--h-accent);
+  transition: width 0.3s var(--ease-out);
+}
+
+.im-nav-links a:hover::after,
+.im-dropdown-trigger:hover::after,
+.im-nav-links a.active::after {
+  width: 100%;
 }
 
 .im-nav-links a:hover,
@@ -98,7 +130,6 @@
 .im-nav-links a.active,
 .im-nav-dropdown.is-active .im-dropdown-trigger {
   color: var(--h-ink);
-  background: rgba(0,0,0,0.04);
 }
 
 .im-header-admin .im-nav-links a:hover {
@@ -117,7 +148,7 @@
   background: white;
   border: 1px solid var(--h-border);
   border-radius: 0.75rem;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-lg);
   min-width: 220px;
   padding: 0.5rem;
   opacity: 0;
@@ -165,31 +196,43 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.im-lang-btn:hover {
+  border-color: var(--h-accent);
+  color: var(--h-accent);
 }
 
 .im-btn {
-  padding: 0.55rem 1.25rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: all 0.2s;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: 0.625rem;
+  padding: 0.55rem 1.25rem;
+  transition: all 200ms var(--ease-out);
+  height: 44px;
 }
 
 .im-btn-ghost {
   color: var(--h-text);
+  background: transparent;
+  border: none;
 }
 
 .im-btn-ghost:hover {
-  background: rgba(0,0,0,0.04);
+  background: var(--muted);
+  color: var(--h-ink);
 }
 
 .im-btn-secondary {
   border: 1.5px solid var(--h-ink);
   color: var(--h-ink);
+  background: transparent;
 }
 
 .im-btn-secondary:hover {
@@ -201,17 +244,22 @@
   background: var(--h-accent);
   color: white;
   padding: 0.6rem 1.5rem;
-  border-radius: 999px;
-  font-weight: 700;
+  border-radius: 0.625rem;
+  font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
-  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
-  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.2);
+  transition: all 200ms var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
 }
 
 .im-btn-premium:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(255, 107, 0, 0.3);
+  box-shadow: 0 6px 16px rgba(196, 30, 58, 0.3);
+  background: #A91830;
 }
 
 /* Mobile Toggle */
@@ -227,6 +275,11 @@
   cursor: pointer;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
+}
+
+.im-mobile-toggle:hover {
+  border-color: var(--h-accent);
 }
 
 @media (max-width: 900px) {
@@ -273,7 +326,8 @@
 }
 
 .im-mobile-nav-content a:hover {
-  background: rgba(0,0,0,0.03);
+  background: var(--muted);
+  color: var(--h-accent);
 }
 
 .im-mobile-nav-content .im-dropdown-menu {
@@ -283,7 +337,7 @@
   transform: none;
   box-shadow: none;
   border: none;
-  background: rgba(0,0,0,0.02);
+  background: var(--muted);
   padding-left: 1.5rem;
   margin: 0.25rem 0;
   display: none;
@@ -315,18 +369,60 @@
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  box-shadow: 0 8px 24px rgba(255, 107, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(196, 30, 58, 0.3);
   cursor: pointer;
   z-index: 1000;
-  transition: all 0.2s;
+  transition: all 200ms var(--ease-out);
 }
 
 .im-chat-widget:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(255, 107, 0, 0.4);
+  box-shadow: 0 12px 32px rgba(196, 30, 58, 0.4);
 }
 
 @media (max-width: 600px) {
   .im-chat-widget span { display: none; }
   .im-chat-widget { padding: 12px; }
+}
+
+/* Underline animate utility */
+.underline-animate {
+  position: relative;
+  text-decoration: none;
+}
+
+.underline-animate::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--brand-red);
+  transition: width 0.3s var(--ease-out);
+}
+
+.underline-animate:hover::after {
+  width: 100%;
+}
+
+/* Shine effect */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-shine:hover::after {
+  left: 100%;
 }

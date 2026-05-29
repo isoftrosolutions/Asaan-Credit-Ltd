@@ -2,40 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Notification;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::where('user_id', Auth::id())
-            ->latest()
-            ->take(30)
-            ->get();
-        return view('notifications.index', compact('notifications'));
+        $userId = \App\Core\Auth::id();
+        $notifications = \App\Core\Database::fetchAll(
+            "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 30",
+            [$userId]
+        );
+        return view('notifications.index', ['notifications' => $notifications]);
     }
 
-    public function markRead(Notification $notification)
+    public function markRead($notification)
     {
-        if ($notification->user_id !== Auth::id()) {
-            abort(403);
+        $userId = \App\Core\Auth::id();
+        $notif = \App\Core\Database::fetch("SELECT * FROM notifications WHERE id = ?", [$notification]);
+        if (!$notif || $notif->user_id !== $userId) {
+            abort(403, 'Unauthorized.');
         }
-        $notification->update(['is_read' => true]);
-        return response()->json(['success' => true]);
+        \App\Core\Database::update('notifications', ['is_read' => 1], 'id = ?', [$notification]);
+        json_response(['success' => true]);
     }
 
     public function markAllRead()
     {
-        Notification::where('user_id', Auth::id())->where('is_read', false)
-            ->update(['is_read' => true]);
-        return back();
+        $userId = \App\Core\Auth::id();
+        \App\Core\Database::update(
+            'notifications',
+            ['is_read' => 1],
+            'user_id = ? AND is_read = 0',
+            [$userId]
+        );
+        back();
     }
 
     public function unreadCount()
     {
-        $count = Notification::where('user_id', Auth::id())->where('is_read', false)->count();
-        return response()->json(['count' => $count]);
+        $userId = \App\Core\Auth::id();
+        $count = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0",
+            [$userId]
+        )->fetchColumn();
+        json_response(['count' => $count]);
     }
 }

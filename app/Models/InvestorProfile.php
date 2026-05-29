@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Core\Database;
 
 class InvestorProfile extends Model
 {
-    protected $fillable = [
+    protected static string $table = 'investor_profiles';
+    protected static array $fillable = [
         'user_id',
         'past_investments',
         'portfolio_companies',
@@ -18,22 +19,46 @@ class InvestorProfile extends Model
         'preferred_geography',
         'references',
     ];
+    protected static array $casts = [
+        'past_investments' => 'integer',
+        'total_capital_deployed' => 'decimal:2',
+        'preferred_sectors' => 'array',
+        'preferred_stages' => 'array',
+        'ticket_min' => 'decimal:2',
+        'ticket_max' => 'decimal:2',
+        'preferred_geography' => 'array',
+    ];
+    protected static array $relationConfig = [
+        'user' => ['type' => 'belongsTo', 'class' => User::class, 'foreignKey' => 'user_id', 'ownerKey' => 'id'],
+    ];
 
-    protected function casts(): array
+    public function user(): ?User
     {
-        return [
-            'past_investments' => 'integer',
-            'total_capital_deployed' => 'decimal:2',
-            'preferred_sectors' => 'array',
-            'preferred_stages' => 'array',
-            'ticket_min' => 'decimal:2',
-            'ticket_max' => 'decimal:2',
-            'preferred_geography' => 'array',
-        ];
+        if (!array_key_exists('user', $this->relations)) {
+            $this->relations['user'] = User::find($this->user_id ?? null);
+        }
+        return $this->relations['user'];
     }
 
-    public function user()
+    public static function updateOrCreate(array $attributes, array $values = []): ?static
     {
-        return $this->belongsTo(User::class);
+        $conditions = [];
+        $params = [];
+        foreach ($attributes as $col => $val) {
+            $conditions[] = "{$col} = ?";
+            $params[] = $val;
+        }
+        $whereSql = implode(' AND ', $conditions);
+        $existing = Database::fetch(
+            "SELECT * FROM " . static::$table . " WHERE {$whereSql} LIMIT 1",
+            $params
+        );
+        if ($existing) {
+            $model = new static();
+            $model->fill((array)$existing);
+            $model->update($values);
+            return $model;
+        }
+        return static::create(array_merge($attributes, $values));
     }
 }

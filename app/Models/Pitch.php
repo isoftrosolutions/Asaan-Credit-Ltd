@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Core\Database;
 
 class Pitch extends Model
 {
-    protected $fillable = [
+    protected static string $table = 'pitches';
+    protected static array $fillable = [
         'user_id', 'tagline', 'company_registration_number', 'company_type',
         'short_summary', 'problem_statement', 'solution',
         'market_size', 'target_customers', 'competitors', 'competitive_advantage',
@@ -23,64 +24,78 @@ class Pitch extends Model
         'relocate_willingness', 'financial_projections',
         'completeness_score', 'is_published',
     ];
+    protected static array $casts = [
+        'funding_amount' => 'decimal:2',
+        'minimum_investment' => 'decimal:2',
+        'previous_funding' => 'decimal:2',
+        'monthly_revenue' => 'decimal:2',
+        'monthly_burn' => 'decimal:2',
+        'equity_offered' => 'decimal:2',
+        'valuation' => 'decimal:2',
+        'growth_rate' => 'decimal:2',
+        'customer_retention' => 'decimal:2',
+        'is_active' => 'boolean',
+        'is_hidden' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_published' => 'boolean',
+        'has_legal_disputes' => 'boolean',
+        'open_to_acquisition' => 'boolean',
+        'matchmaking_tags' => 'array',
+        'completeness_score' => 'integer',
+    ];
+    protected static array $relationConfig = [
+        'user' => ['type' => 'belongsTo', 'class' => User::class, 'foreignKey' => 'user_id', 'ownerKey' => 'id'],
+        'sector' => ['type' => 'belongsTo', 'class' => Sector::class, 'foreignKey' => 'sector_id', 'ownerKey' => 'id'],
+        'media' => ['type' => 'hasMany', 'class' => PitchMedia::class, 'foreignKey' => 'pitch_id', 'localKey' => 'id'],
+        'teamMembers' => ['type' => 'hasMany', 'class' => PitchTeamMember::class, 'foreignKey' => 'pitch_id', 'localKey' => 'id'],
+        'interestRequests' => ['type' => 'hasMany', 'class' => InterestRequest::class, 'foreignKey' => 'pitch_id', 'localKey' => 'id'],
+    ];
 
-    protected function casts(): array
+    public function user(): ?User
     {
-        return [
-            'funding_amount' => 'decimal:2',
-            'minimum_investment' => 'decimal:2',
-            'previous_funding' => 'decimal:2',
-            'monthly_revenue' => 'decimal:2',
-            'monthly_burn' => 'decimal:2',
-            'equity_offered' => 'decimal:2',
-            'valuation' => 'decimal:2',
-            'growth_rate' => 'decimal:2',
-            'customer_retention' => 'decimal:2',
-            'is_active' => 'boolean',
-            'is_hidden' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_published' => 'boolean',
-            'has_legal_disputes' => 'boolean',
-            'open_to_acquisition' => 'boolean',
-            'matchmaking_tags' => 'array',
-            'completeness_score' => 'integer',
-        ];
+        if (!array_key_exists('user', $this->relations)) {
+            $this->relations['user'] = User::find($this->user_id ?? null);
+        }
+        return $this->relations['user'];
     }
 
-    public function user()
+    public function sector(): ?Sector
     {
-        return $this->belongsTo(User::class);
+        if (!array_key_exists('sector', $this->relations)) {
+            $this->relations['sector'] = Sector::find($this->sector_id ?? null);
+        }
+        return $this->relations['sector'];
     }
 
-    public function sector()
+    public function media(): array
     {
-        return $this->belongsTo(Sector::class);
+        if (!array_key_exists('media', $this->relations)) {
+            $this->relations['media'] = PitchMedia::where('pitch_id', $this->id ?? 0)->get();
+        }
+        return $this->relations['media'];
     }
 
-    public function media()
+    public function teamMembers(): array
     {
-        return $this->hasMany(PitchMedia::class);
+        if (!array_key_exists('teamMembers', $this->relations)) {
+            $this->relations['teamMembers'] = PitchTeamMember::where('pitch_id', $this->id ?? 0)->get();
+        }
+        return $this->relations['teamMembers'];
     }
 
-    public function teamMembers()
+    public function interestRequests(): array
     {
-        return $this->hasMany(PitchTeamMember::class);
-    }
-
-    public function interestRequests()
-    {
-        return $this->hasMany(InterestRequest::class);
+        if (!array_key_exists('interestRequests', $this->relations)) {
+            $this->relations['interestRequests'] = InterestRequest::where('pitch_id', $this->id ?? 0)->get();
+        }
+        return $this->relations['interestRequests'];
     }
 
     public function matchScore(): float
     {
-        return 0;
+        return 0.0;
     }
 
-    /**
-     * Returns 0-100 score based on field presence. Used as an anti-spam signal
-     * and to surface "ready to publish" pitches on the homepage.
-     */
     public function computeCompleteness(): int
     {
         $weights = [
@@ -97,8 +112,8 @@ class Pitch extends Model
         ];
         $score = 0;
         foreach ($weights as $field => $weight) {
-            $value = $this->{$field};
-            if (is_array($value) ? !empty($value) : !blank($value)) {
+            $value = $this->$field ?? null;
+            if (is_array($value) ? !empty($value) : !empty($value)) {
                 $score += $weight;
             }
         }

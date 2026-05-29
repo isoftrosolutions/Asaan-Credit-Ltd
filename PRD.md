@@ -5,7 +5,7 @@
 
 | Field | Value |
 |---|---|
-| **Product Name** | InvestMatch Nepal *(working title)* |
+| **Product Name** | Asaan Marketplace — Investment & Business Matching |
 | **Version** | 1.0 |
 | **Document Date** | 21 May 2026 |
 | **Prepared By** | Devbarat Prasad Patel — iSoftro Solutions |
@@ -321,15 +321,15 @@ All features hosted on a separate `/admin` route, accessible only by Client. Bui
 
 | Layer | Technology |
 |---|---|
-| Backend API | PHP 8.2 + Laravel 11 |
+| Backend API | PHP 8.2+ (Core PHP, no framework) |
 | Database | MySQL 8 / MariaDB 10.6+ |
-| Web Frontend | Laravel Blade + Tailwind CSS + Alpine.js *(server-rendered, no separate SPA)* |
+| Web Frontend | Vanilla PHP templates + Vanilla JavaScript + Custom CSS |
 | Mobile App | React Native (Android only in v1) |
-| Authentication | Laravel Sanctum (mobile JWT) + session (web) |
+| Authentication | Session-based (PHP native sessions) |
 | File Storage | VPS local filesystem (with directory hardening for verification docs) |
 | Email | SMTP via existing Hostinger mail or transactional service |
 | Hosting | Hostinger VPS with CyberPanel + OpenLiteSpeed |
-| Admin Panel | Same Laravel app, `/admin` namespace, role-gated middleware |
+| Admin Panel | Same app, `/admin` namespace, role-gated middleware |
 
 ### 7.2 Deliverables
 

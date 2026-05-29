@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Core\Database;
 
 class Sector extends Model
 {
-    protected $fillable = ['name', 'slug', 'is_active'];
+    protected static string $table = 'sectors';
+    protected static array $fillable = ['name', 'slug', 'is_active'];
+    protected static array $casts = [
+        'is_active' => 'boolean',
+    ];
+    protected static array $relationConfig = [
+        'pitches' => ['type' => 'hasMany', 'class' => Pitch::class, 'foreignKey' => 'sector_id', 'localKey' => 'id'],
+    ];
 
-    protected function casts(): array
+    public function pitches(): array
     {
-        return [
-            'is_active' => 'boolean',
-        ];
-    }
-
-    public function pitches()
-    {
-        return $this->hasMany(Pitch::class);
+        if (!array_key_exists('pitches', $this->relations)) {
+            $this->relations['pitches'] = Pitch::where('sector_id', $this->id ?? 0)->get();
+        }
+        return $this->relations['pitches'];
     }
 }

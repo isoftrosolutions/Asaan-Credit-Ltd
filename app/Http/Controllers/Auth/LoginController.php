@@ -3,10 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -15,33 +11,41 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store()
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
+        $email = \App\Core\Request::input('email');
+        $password = \App\Core\Request::input('password');
+        $remember = \App\Core\Request::boolean('remember');
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
+        if (empty($email)) {
+            $_SESSION['_errors'] = ['email' => ['The email field is required.']];
+            $_SESSION['_old'] = ['email' => $email];
+            back();
+        }
+        if (empty($password)) {
+            $_SESSION['_errors'] = ['password' => ['The password field is required.']];
+            $_SESSION['_old'] = ['email' => $email];
+            back();
         }
 
-        $request->session()->regenerate();
+        if (!\App\Core\Auth::attempt($email, $password)) {
+            $_SESSION['_errors'] = ['email' => ['These credentials do not match our records.']];
+            $_SESSION['_old'] = ['email' => $email];
+            back();
+        }
 
-        $user = Auth::user();
+        session_regenerate_id(true);
+
+        $user = \App\Core\Auth::user();
         if ($user->is_admin) {
-            return redirect()->route('admin.dashboard');
+            redirect(route('admin.dashboard'));
         }
-        return redirect()->route($user->role . '.dashboard');
+        redirect(route($user->role . '.dashboard'));
     }
 
-    public function destroy(Request $request): RedirectResponse
+    public function destroy()
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+        \App\Core\Auth::logout();
+        redirect('/');
     }
 }

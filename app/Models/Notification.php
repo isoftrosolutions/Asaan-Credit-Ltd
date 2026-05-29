@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Core\Database;
 
 class Notification extends Model
 {
-    protected $fillable = [
+    protected static string $table = 'notifications';
+    protected static array $fillable = [
         'user_id', 'type', 'title', 'body', 'action_url', 'is_read',
     ];
+    protected static array $casts = [
+        'is_read' => 'boolean',
+    ];
+    protected static array $relationConfig = [
+        'user' => ['type' => 'belongsTo', 'class' => User::class, 'foreignKey' => 'user_id', 'ownerKey' => 'id'],
+    ];
 
-    protected function casts(): array
+    public function user(): ?User
     {
-        return [
-            'is_read' => 'boolean',
-        ];
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        if (!array_key_exists('user', $this->relations)) {
+            $this->relations['user'] = User::find($this->user_id ?? null);
+        }
+        return $this->relations['user'];
     }
 }

@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Core\Database;
 
 class Faq extends Model
 {
-    protected $fillable = ['question', 'answer', 'sort_order', 'is_active'];
-
-    protected function casts(): array
-    {
-        return [
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
-        ];
-    }
+    protected static string $table = 'faqs';
+    protected static array $fillable = ['question', 'answer', 'sort_order', 'is_active'];
+    protected static array $casts = [
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
+    ];
+    protected static array $relationConfig = [];
 }

@@ -2,49 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InterestRequest;
-use App\Models\Pitch;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 class DashboardController extends Controller
 {
     public function investorDashboard()
     {
-        $user = Auth::user();
-        $totalSent = InterestRequest::where('sender_id', $user->id)->count();
-        $matchesMade = InterestRequest::where('sender_id', $user->id)->where('status', 'accepted')->count();
-        $pendingResponses = InterestRequest::where('sender_id', $user->id)->where('status', 'pending')->count();
-        $recentActivity = InterestRequest::where('sender_id', $user->id)
-            ->orWhere('receiver_id', $user->id)
-            ->with(['sender', 'receiver', 'pitch'])
-            ->latest()
-            ->take(6)
-            ->get();
-        $suggestedPitches = Pitch::where('is_active', true)
-            ->where('is_hidden', false)
-            ->with('user')
-            ->latest()
-            ->take(6)
-            ->get();
+        $user = \App\Core\Auth::user();
 
-        return view('dashboard.investor', compact(
-            'user', 'totalSent', 'matchesMade', 'pendingResponses',
-            'recentActivity', 'suggestedPitches'
-        ));
+        $totalSent = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE sender_id = ?", [$user->id]
+        )->fetchColumn();
+
+        $matchesMade = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE sender_id = ? AND status = ?", [$user->id, 'accepted']
+        )->fetchColumn();
+
+        $pendingResponses = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE sender_id = ? AND status = ?", [$user->id, 'pending']
+        )->fetchColumn();
+
+        $recentActivity = \App\Core\Database::fetchAll(
+            "SELECT * FROM interest_requests WHERE sender_id = ? OR receiver_id = ? ORDER BY created_at DESC LIMIT 6",
+            [$user->id, $user->id]
+        );
+
+        $suggestedPitches = \App\Core\Database::fetchAll(
+            "SELECT p.*, u.name AS user_name, u.company_name AS user_company_name
+             FROM pitches p
+             JOIN users u ON p.user_id = u.id
+             WHERE p.is_active = 1 AND p.is_hidden = 0
+             ORDER BY p.created_at DESC LIMIT 6"
+        );
+
+        return view('dashboard.investor', [
+            'user' => $user,
+            'totalSent' => $totalSent,
+            'matchesMade' => $matchesMade,
+            'pendingResponses' => $pendingResponses,
+            'recentActivity' => $recentActivity,
+            'suggestedPitches' => $suggestedPitches,
+        ]);
     }
 
     public function entrepreneurDashboard()
     {
-        $user = Auth::user();
-        $pitch = Pitch::where('user_id', $user->id)->first();
-        $totalRequests = InterestRequest::where('receiver_id', $user->id)->count();
-        $acceptedRequests = InterestRequest::where('receiver_id', $user->id)->where('status', 'accepted')->count();
-        $pendingRequests = InterestRequest::where('receiver_id', $user->id)->where('status', 'pending')->count();
+        $user = \App\Core\Auth::user();
 
-        return view('dashboard.entrepreneur', compact(
-            'user', 'pitch', 'totalRequests', 'acceptedRequests', 'pendingRequests'
-        ));
+        $pitch = \App\Core\Database::fetch(
+            "SELECT * FROM pitches WHERE user_id = ?", [$user->id]
+        );
+
+        $totalRequests = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE receiver_id = ?", [$user->id]
+        )->fetchColumn();
+
+        $acceptedRequests = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE receiver_id = ? AND status = ?", [$user->id, 'accepted']
+        )->fetchColumn();
+
+        $pendingRequests = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM interest_requests WHERE receiver_id = ? AND status = ?", [$user->id, 'pending']
+        )->fetchColumn();
+
+        return view('dashboard.entrepreneur', [
+            'user' => $user,
+            'pitch' => $pitch,
+            'totalRequests' => $totalRequests,
+            'acceptedRequests' => $acceptedRequests,
+            'pendingRequests' => $pendingRequests,
+        ]);
     }
 }

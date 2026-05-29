@@ -3,13 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 
 class RegisterController extends Controller
 {
@@ -18,30 +11,62 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store()
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:investor,entrepreneur'],
-            'account_type' => ['required', 'in:individual,company'],
-            'phone' => ['nullable', 'string', 'max:20'],
-        ]);
+        $data = \App\Core\Request::all();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'account_type' => $request->account_type,
-            'phone' => $request->phone,
+        $errors = [];
+
+        if (empty($data['name']) || strlen($data['name']) > 255) {
+            $errors['name'][] = 'The name field is required and must not exceed 255 characters.';
+        }
+
+        $email = strtolower(trim($data['email'] ?? ''));
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'][] = 'The email must be a valid email address.';
+        }
+
+        $existing = \App\Core\Database::fetch("SELECT id FROM users WHERE email = ?", [$email]);
+        if ($existing) {
+            $errors['email'][] = 'The email has already been taken.';
+        }
+
+        $password = $data['password'] ?? '';
+        if (strlen($password) < 8) {
+            $errors['password'][] = 'The password must be at least 8 characters.';
+        }
+        if ($password !== ($data['password_confirmation'] ?? '')) {
+            $errors['password'][] = 'The password confirmation does not match.';
+        }
+
+        if (empty($data['role']) || !in_array($data['role'], ['investor', 'entrepreneur'])) {
+            $errors['role'][] = 'The role field is required.';
+        }
+        if (empty($data['account_type']) || !in_array($data['account_type'], ['individual', 'company'])) {
+            $errors['account_type'][] = 'The account type field is required.';
+        }
+        if (!empty($data['phone']) && strlen($data['phone']) > 20) {
+            $errors['phone'][] = 'The phone must not exceed 20 characters.';
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['_errors'] = $errors;
+            $_SESSION['_old'] = $data;
+            back();
+        }
+
+        $userId = \App\Core\Database::insert('users', [
+            'name' => $data['name'],
+            'email' => $email,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'role' => $data['role'],
+            'account_type' => $data['account_type'],
+            'phone' => $data['phone'] ?? null,
             'verification_status' => 'unverified',
         ]);
 
-        event(new Registered($user));
-        Auth::login($user);
+        \App\Core\Auth::login($userId);
 
-        return redirect()->route($user->role . '.dashboard');
+        redirect(route($data['role'] . '.dashboard'));
     }
 }

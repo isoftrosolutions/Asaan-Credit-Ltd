@@ -2,19 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pitch;
-use App\Models\PitchMedia;
-use App\Models\PitchTeamMember;
-use App\Models\Sector;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-
 class PitchController extends Controller
 {
+    private function computeCompleteness($pitch): int
+    {
+        $weights = [
+            'tagline' => 5, 'short_summary' => 5, 'sector_id' => 3,
+            'stage' => 3, 'product_stage' => 3, 'company_type' => 2,
+            'problem_statement' => 8, 'solution' => 8, 'market_size' => 4,
+            'target_customers' => 4, 'competitors' => 3, 'competitive_advantage' => 4,
+            'business_model' => 5, 'revenue_model' => 3, 'traction' => 5,
+            'funding_amount' => 6, 'equity_offered' => 4, 'fund_usage' => 4,
+            'valuation' => 3, 'minimum_investment' => 2,
+            'pitch_deck' => 6, 'pitch_video_url' => 3,
+            'looking_for' => 2, 'investor_involvement' => 2,
+            'matchmaking_tags' => 3,
+        ];
+        $score = 0;
+        foreach ($weights as $field => $weight) {
+            $value = $pitch->{$field} ?? null;
+            if (is_array($value)) {
+                if (!empty($value)) $score += $weight;
+            } elseif ($value !== null && $value !== '') {
+                $score += $weight;
+            }
+        }
+        return min(100, $score);
+    }
+
     public function create()
     {
-        $sectors = Sector::where('is_active', true)->get();
+        $sectors = \App\Core\Database::fetchAll("SELECT * FROM sectors WHERE is_active = 1");
         $stages = ['idea', 'mvp', 'early_revenue', 'growth'];
         $productStages = ['idea_only', 'prototype', 'mvp', 'early_users', 'revenue_generating', 'scaling'];
         $companyTypes = ['idea_individual', 'registered_startup', 'pvt_ltd', 'partnership', 'other'];
@@ -26,114 +44,96 @@ class PitchController extends Controller
         $provinces = ['Koshi', 'Madhesh', 'Bagmati', 'Gandaki', 'Lumbini', 'Karnali', 'Sudurpashchim'];
         $relocateOptions = ['anywhere_in_nepal', 'same_province_only', 'open_to_remote', 'not_willing'];
 
-        $pitch = Pitch::where('user_id', Auth::id())->first();
-        $pitch?->load('teamMembers');
+        $pitch = \App\Core\Database::fetch(
+            "SELECT * FROM pitches WHERE user_id = ?", [\App\Core\Auth::id()]
+        );
+        $teamMembers = [];
+        if ($pitch) {
+            $teamMembers = \App\Core\Database::fetchAll(
+                "SELECT * FROM pitch_team_members WHERE pitch_id = ?", [$pitch->id]
+            );
+        }
 
-        return view('pitch.create', compact(
-            'sectors', 'stages', 'productStages', 'companyTypes',
-            'revenueModels', 'businessTypes', 'customerTypes',
-            'lookingFor', 'investorInvolvements', 'provinces', 'pitch', 'relocateOptions'
-        ));
+        return view('pitch.create', [
+            'sectors' => $sectors, 'stages' => $stages, 'productStages' => $productStages,
+            'companyTypes' => $companyTypes, 'revenueModels' => $revenueModels,
+            'businessTypes' => $businessTypes, 'customerTypes' => $customerTypes,
+            'lookingFor' => $lookingFor, 'investorInvolvements' => $investorInvolvements,
+            'provinces' => $provinces, 'pitch' => $pitch, 'relocateOptions' => $relocateOptions,
+            'teamMembers' => $teamMembers,
+        ]);
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $rules = [
-            'tagline' => 'nullable|string|max:140',
-            'company_registration_number' => 'nullable|string|max:255',
-            'company_type' => 'nullable|string',
-            'short_summary' => 'nullable|string|max:300',
-            'problem_statement' => 'nullable|string|max:3000',
-            'solution' => 'nullable|string|max:3000',
-            'market_size' => 'nullable|string|max:1000',
-            'target_customers' => 'nullable|string|max:1000',
-            'competitors' => 'nullable|string|max:1000',
-            'competitive_advantage' => 'nullable|string|max:1000',
-            'business_model' => 'nullable|string|max:1000',
-            'revenue_model' => 'nullable|string',
-            'traction' => 'nullable|string|max:1000',
-            'monthly_revenue' => 'nullable|numeric|min:0',
-            'monthly_users' => 'nullable|integer|min:0',
-            'growth_rate' => 'nullable|numeric|min:0|max:1000',
-            'customer_retention' => 'nullable|numeric|min:0|max:100',
-            'funding_amount' => 'nullable|numeric|min:0',
-            'minimum_investment' => 'nullable|numeric|min:0',
-            'previous_funding' => 'nullable|numeric|min:0',
-            'previous_funding_source' => 'nullable|string|max:255',
-            'equity_offered' => 'nullable|numeric|min:0|max:100',
-            'fund_usage' => 'nullable|string|max:1000',
-            'valuation' => 'nullable|numeric|min:0',
-            'stage' => 'nullable|string',
-            'product_stage' => 'nullable|string',
-            'sector_id' => 'nullable|exists:sectors,id',
-            'pitch_video_url' => 'nullable|url|max:255',
-            'has_legal_disputes' => 'boolean',
-            'legal_details' => 'nullable|string|max:1000',
-            'existing_debt' => 'nullable|string|max:1000',
-            'business_type' => 'nullable|string',
-            'customer_type' => 'nullable|string',
-            'looking_for' => 'nullable|string',
-            'investor_involvement' => 'nullable|string',
-            'open_to_acquisition' => 'boolean',
-            'monthly_burn' => 'nullable|numeric|min:0',
-            'runway_months' => 'nullable|integer|min:0',
-            'matchmaking_tags' => 'nullable|array',
-            'matchmaking_tags.*' => 'string|max:50',
-            'relocate_willingness' => 'nullable|string|max:50',
-            'pitch_deck' => 'nullable|file|mimes:pdf|max:10240',
-            'financial_projections' => 'nullable|file|mimes:pdf,xlsx,xls,csv|max:10240',
-            'product_photos' => 'nullable|array|max:5',
-            'product_photos.*' => 'image|max:2048',
-            'team_members' => 'nullable|array|max:10',
-            'team_members.*.name' => 'nullable|string|max:255',
-            'team_members.*.role' => 'nullable|string|max:255',
-            'team_members.*.linkedin_url' => 'nullable|url|max:255',
-            'is_published' => 'boolean',
-        ];
+        $data = \App\Core\Request::all();
+        $userId = \App\Core\Auth::id();
 
-        $data = $request->validate($rules);
+        $data['user_id'] = $userId;
+        $data['has_legal_disputes'] = \App\Core\Request::boolean('has_legal_disputes') ? 1 : 0;
+        $data['open_to_acquisition'] = \App\Core\Request::boolean('open_to_acquisition') ? 1 : 0;
+        $data['is_published'] = \App\Core\Request::boolean('is_published') ? 1 : 0;
 
-        if ($request->hasFile('pitch_deck')) {
-            $data['pitch_deck'] = $request->file('pitch_deck')->store('pitch-decks', 'public');
-        }
-        if ($request->hasFile('financial_projections')) {
-            $data['financial_projections'] = $request->file('financial_projections')->store('financial-projections', 'public');
+        if (isset($data['matchmaking_tags']) && is_array($data['matchmaking_tags'])) {
+            $data['matchmaking_tags'] = json_encode($data['matchmaking_tags']);
         }
 
-        $data['user_id'] = Auth::id();
-        $data['has_legal_disputes'] = $request->boolean('has_legal_disputes');
-        $data['open_to_acquisition'] = $request->boolean('open_to_acquisition');
-        $data['is_published'] = $request->boolean('is_published');
+        unset($data['product_photos'], $data['team_members'], $data['pitch_deck'], $data['financial_projections']);
 
-        // Strip non-column form fields before mass assignment
-        unset($data['product_photos'], $data['team_members']);
+        if (\App\Core\Request::hasFile('pitch_deck')) {
+            $file = \App\Core\Request::file('pitch_deck');
+            $path = upload_file($file, 'pitch-decks');
+            if ($path) $data['pitch_deck'] = $path;
+        }
+        if (\App\Core\Request::hasFile('financial_projections')) {
+            $file = \App\Core\Request::file('financial_projections');
+            $path = upload_file($file, 'financial-projections');
+            if ($path) $data['financial_projections'] = $path;
+        }
 
-        $pitch = Pitch::updateOrCreate(
-            ['user_id' => Auth::id()],
-            $data
-        );
+        $existing = \App\Core\Database::fetch("SELECT id FROM pitches WHERE user_id = ?", [$userId]);
+        if ($existing) {
+            \App\Core\Database::update('pitches', $data, 'id = ?', [$existing->id]);
+            $pitchId = $existing->id;
+        } else {
+            $pitchId = \App\Core\Database::insert('pitches', $data);
+        }
 
-        $pitch->update(['completeness_score' => $pitch->computeCompleteness()]);
+        $pitch = \App\Core\Database::fetch("SELECT * FROM pitches WHERE id = ?", [$pitchId]);
+        $score = $this->computeCompleteness($pitch);
+        \App\Core\Database::update('pitches', ['completeness_score' => $score], 'id = ?', [$pitchId]);
 
-        if ($request->hasFile('product_photos')) {
-            $pitch->media()->delete();
-            foreach ($request->file('product_photos') as $i => $photo) {
-                $path = $photo->store('pitch-media', 'public');
-                PitchMedia::create([
-                    'pitch_id' => $pitch->id,
-                    'file_path' => $path,
-                    'file_type' => $photo->getClientMimeType(),
-                    'sort_order' => $i,
-                ]);
+        $productPhotos = $_FILES['product_photos'] ?? null;
+        if ($productPhotos && is_array($productPhotos['name'])) {
+            \App\Core\Database::delete('pitch_media', 'pitch_id = ?', [$pitchId]);
+            foreach ($productPhotos['name'] as $i => $name) {
+                if ($productPhotos['error'][$i] !== UPLOAD_ERR_OK) continue;
+                $file = [
+                    'name' => $name,
+                    'type' => $productPhotos['type'][$i] ?? 'application/octet-stream',
+                    'tmp_name' => $productPhotos['tmp_name'][$i],
+                    'error' => $productPhotos['error'][$i],
+                    'size' => $productPhotos['size'][$i] ?? 0,
+                ];
+                $path = upload_file($file, 'pitch-media');
+                if ($path) {
+                    \App\Core\Database::insert('pitch_media', [
+                        'pitch_id' => $pitchId,
+                        'file_path' => $path,
+                        'file_type' => $file['type'],
+                        'sort_order' => $i,
+                    ]);
+                }
             }
         }
 
-        if ($request->has('team_members')) {
-            $pitch->teamMembers()->delete();
-            foreach ($request->team_members as $member) {
+        $teamMembers = \App\Core\Request::input('team_members');
+        if (is_array($teamMembers)) {
+            \App\Core\Database::delete('pitch_team_members', 'pitch_id = ?', [$pitchId]);
+            foreach ($teamMembers as $member) {
                 if (!empty($member['name'])) {
-                    PitchTeamMember::create([
-                        'pitch_id' => $pitch->id,
+                    \App\Core\Database::insert('pitch_team_members', [
+                        'pitch_id' => $pitchId,
                         'name' => $member['name'],
                         'role' => $member['role'] ?? null,
                         'linkedin_url' => $member['linkedin_url'] ?? null,
@@ -142,16 +142,20 @@ class PitchController extends Controller
             }
         }
 
-        return redirect()->route('entrepreneur.dashboard')
-            ->with('success', 'Pitch saved successfully.');
+        set_flash('success', 'Pitch saved successfully.');
+        redirect(route('entrepreneur.dashboard'));
     }
 
-    public function edit(Pitch $pitch)
+    public function edit($pitch)
     {
-        if ($pitch->user_id !== Auth::id() && !Auth::user()->is_admin) {
-            abort(403);
+        $p = \App\Core\Database::fetch("SELECT * FROM pitches WHERE id = ?", [$pitch]);
+        if (!$p) abort(404);
+        if ($p->user_id !== \App\Core\Auth::id()) {
+            $user = \App\Core\Auth::user();
+            if (!$user || !$user->is_admin) abort(403, 'Unauthorized.');
         }
-        $sectors = Sector::where('is_active', true)->get();
+
+        $sectors = \App\Core\Database::fetchAll("SELECT * FROM sectors WHERE is_active = 1");
         $stages = ['idea', 'mvp', 'early_revenue', 'growth'];
         $productStages = ['idea_only', 'prototype', 'mvp', 'early_users', 'revenue_generating', 'scaling'];
         $companyTypes = ['idea_individual', 'registered_startup', 'pvt_ltd', 'partnership', 'other'];
@@ -163,74 +167,142 @@ class PitchController extends Controller
         $provinces = ['Koshi', 'Madhesh', 'Bagmati', 'Gandaki', 'Lumbini', 'Karnali', 'Sudurpashchim'];
         $relocateOptions = ['anywhere_in_nepal', 'same_province_only', 'open_to_remote', 'not_willing'];
 
-        $pitch->load('teamMembers');
+        $teamMembers = \App\Core\Database::fetchAll(
+            "SELECT * FROM pitch_team_members WHERE pitch_id = ?", [$p->id]
+        );
 
-        return view('pitch.edit', compact(
-            'pitch', 'sectors', 'stages', 'productStages', 'companyTypes',
-            'revenueModels', 'businessTypes', 'customerTypes',
-            'lookingFor', 'investorInvolvements', 'provinces', 'relocateOptions'
-        ));
+        return view('pitch.edit', [
+            'pitch' => $p, 'sectors' => $sectors, 'stages' => $stages, 'productStages' => $productStages,
+            'companyTypes' => $companyTypes, 'revenueModels' => $revenueModels,
+            'businessTypes' => $businessTypes, 'customerTypes' => $customerTypes,
+            'lookingFor' => $lookingFor, 'investorInvolvements' => $investorInvolvements,
+            'provinces' => $provinces, 'relocateOptions' => $relocateOptions,
+            'teamMembers' => $teamMembers,
+        ]);
     }
 
-    public function update(Request $request, Pitch $pitch)
+    public function update($request, $pitch)
     {
-        if ($pitch->user_id !== Auth::id() && !Auth::user()->is_admin) {
-            abort(403);
+        $p = \App\Core\Database::fetch("SELECT * FROM pitches WHERE id = ?", [$pitch]);
+        if (!$p) abort(404);
+        if ($p->user_id !== \App\Core\Auth::id()) {
+            $user = \App\Core\Auth::user();
+            if (!$user || !$user->is_admin) abort(403, 'Unauthorized.');
         }
-        return $this->store($request);
+        return $this->store();
     }
 
-    public function show(Pitch $pitch)
+    public function show($pitch)
     {
-        $pitch->load(['user.sentInterestRequests', 'sector', 'media', 'teamMembers']);
-        $user = Auth::user();
+        $p = \App\Core\Database::fetch(
+            "SELECT p.*, u.name AS user_name, u.company_name AS user_company_name, u.profile_photo AS user_profile_photo,
+                    u.verification_status AS user_verification_status, u.email AS user_email,
+                    s.name AS sector_name
+             FROM pitches p
+             JOIN users u ON p.user_id = u.id
+             LEFT JOIN sectors s ON p.sector_id = s.id
+             WHERE p.id = ?",
+            [$pitch]
+        );
+        if (!$p) abort(404);
+
+        $media = \App\Core\Database::fetchAll("SELECT * FROM pitch_media WHERE pitch_id = ? ORDER BY sort_order ASC", [$p->id]);
+        $teamMembers = \App\Core\Database::fetchAll("SELECT * FROM pitch_team_members WHERE pitch_id = ?", [$p->id]);
+
+        $user = \App\Core\Auth::user();
         $hasSentRequest = false;
         if ($user) {
-            $hasSentRequest = $pitch->interestRequests()
-                ->where('sender_id', $user->id)
-                ->exists();
+            $existing = \App\Core\Database::fetch(
+                "SELECT id FROM interest_requests WHERE sender_id = ? AND pitch_id = ?",
+                [$user->id, $p->id]
+            );
+            $hasSentRequest = (bool)$existing;
         }
-        return view('pitch.show', compact('pitch', 'hasSentRequest'));
+
+        return view('pitch.show', [
+            'pitch' => $p,
+            'pitch_media' => $media,
+            'team_members' => $teamMembers,
+            'hasSentRequest' => $hasSentRequest,
+        ]);
     }
 
-    public function publicIndex(Request $request)
+    public function publicIndex()
     {
-        $query = Pitch::where('is_active', true)
-            ->where('is_hidden', false)
-            ->with('user');
+        $page = max(1, (int)(\App\Core\Request::query('page', 1)));
+        $perPage = 20;
 
-        if ($request->filled('sector')) {
-            $query->where('sector_id', $request->sector);
+        $conditions = [];
+        $params = [];
+
+        $conditions[] = "p.is_active = 1";
+        $conditions[] = "p.is_hidden = 0";
+
+        if (\App\Core\Request::filled('sector')) {
+            $conditions[] = "p.sector_id = ?";
+            $params[] = \App\Core\Request::input('sector');
         }
-        if ($request->filled('stage')) {
-            $query->where('stage', $request->stage);
+        if (\App\Core\Request::filled('stage')) {
+            $conditions[] = "p.stage = ?";
+            $params[] = \App\Core\Request::input('stage');
         }
-        if ($request->filled('product_stage')) {
-            $query->where('product_stage', $request->product_stage);
+        if (\App\Core\Request::filled('product_stage')) {
+            $conditions[] = "p.product_stage = ?";
+            $params[] = \App\Core\Request::input('product_stage');
         }
-        if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('tagline', 'like', "%{$s}%")
-                    ->orWhere('short_summary', 'like', "%{$s}%")
-                    ->orWhereHas('user', fn($uq) => $uq->where('name', 'like', "%{$s}%")
-                        ->orWhere('company_name', 'like', "%{$s}%"));
-            });
+        if (\App\Core\Request::filled('search')) {
+            $s = \App\Core\Request::input('search');
+            $conditions[] = "(p.tagline LIKE ? OR p.short_summary LIKE ? OR u.name LIKE ? OR u.company_name LIKE ?)";
+            $params[] = "%{$s}%";
+            $params[] = "%{$s}%";
+            $params[] = "%{$s}%";
+            $params[] = "%{$s}%";
         }
-        if ($request->filled('funding_min')) {
-            $query->where('funding_amount', '>=', $request->funding_min);
+        if (\App\Core\Request::filled('funding_min')) {
+            $conditions[] = "p.funding_amount >= ?";
+            $params[] = \App\Core\Request::input('funding_min');
         }
-        if ($request->filled('funding_max')) {
-            $query->where('funding_amount', '<=', $request->funding_max);
+        if (\App\Core\Request::filled('funding_max')) {
+            $conditions[] = "p.funding_amount <= ?";
+            $params[] = \App\Core\Request::input('funding_max');
         }
-        if ($request->boolean('verified_only')) {
-            $query->whereHas('user', fn($q) => $q->where('verification_status', 'verified'));
+        if (\App\Core\Request::boolean('verified_only')) {
+            $conditions[] = "u.verification_status = ?";
+            $params[] = 'verified';
         }
 
-        $pitches = $query->latest()->paginate(20);
-        $sectors = Sector::where('is_active', true)->get();
+        $whereClause = 'WHERE ' . implode(' AND ', $conditions);
+
+        $total = (int)\App\Core\Database::query(
+            "SELECT COUNT(*) FROM pitches p JOIN users u ON p.user_id = u.id $whereClause",
+            $params
+        )->fetchColumn();
+
+        $offset = ($page - 1) * $perPage;
+        $pitches = \App\Core\Database::fetchAll(
+            "SELECT p.*, u.name AS user_name, u.company_name AS user_company_name,
+                    u.profile_photo AS user_profile_photo, u.verification_status AS user_verification_status
+             FROM pitches p
+             JOIN users u ON p.user_id = u.id
+             $whereClause
+             ORDER BY p.created_at DESC
+             LIMIT ? OFFSET ?",
+            array_merge($params, [$perPage, $offset])
+        );
+
+        $sectors = \App\Core\Database::fetchAll("SELECT * FROM sectors WHERE is_active = 1");
         $stages = ['idea', 'mvp', 'early_revenue', 'growth'];
 
-        return view('browse.entrepreneurs', compact('pitches', 'sectors', 'stages'));
+        return view('browse.entrepreneurs', [
+            'pitches' => [
+                'items' => $pitches,
+                'total' => (int)$total,
+                'perPage' => $perPage,
+                'currentPage' => $page,
+                'lastPage' => (int)ceil($total / $perPage),
+            ],
+            'sectors' => $sectors,
+            'stages' => $stages,
+        ]);
     }
 }

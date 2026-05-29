@@ -18,10 +18,9 @@ Asaan Marketplace (operated by Asaan Export Import Pvt Ltd) is a premium, verifi
 
 ## 🛠 Tech Stack
 
-- **Backend:** [Laravel](https://laravel.com/)
-- **Frontend:** Laravel Blade, Vanilla JavaScript, Custom CSS
-- **Bundling:** [Vite](https://vitejs.dev/)
-- **Database:** Support for MySQL, PostgreSQL, or SQLite
+- **Backend:** Core PHP (PDO/MySQL)
+- **Frontend:** Vanilla PHP, Vanilla JavaScript, Custom CSS
+- **Database:** MySQL / MariaDB
 
 ## ⚙️ Installation & Setup
 
@@ -31,35 +30,25 @@ Asaan Marketplace (operated by Asaan Export Import Pvt Ltd) is a premium, verifi
    cd invest-match-laravel
    ```
 
-2. **Install Dependencies:**
-   ```bash
-   composer install
-   npm install
+2. **Configure Environment:**
+   - Edit `.env` with your database credentials:
+   ```
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=your_database
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   APP_URL=https://yourdomain.com
    ```
 
-3. **Environment Setup:**
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-   *Configure your database settings in the `.env` file.*
+3. **Database Setup:**
+   - Import the SQL schema from `database/schema.sql` (or run migrations)
+   - The app will auto-connect using the `.env` credentials
 
-4. **Database & Seeding:**
-   ```bash
-   php artisan migrate --seed
-   ```
-
-5. **Build Assets:**
-   ```bash
-   npm run build
-   # or for development:
-   npm run dev
-   ```
-
-6. **Start the Server:**
-   ```bash
-   php artisan serve
-   ```
+4. **Web Server:**
+   - Point DocumentRoot to the `public/` directory
+   - Ensure `mod_rewrite` is enabled for clean URLs
+   - No Composer or Node.js required
 
 ## 📄 License
 
